@@ -37,6 +37,18 @@ PRICING: dict[str, ModelPrice] = {
     "claude-fable-5":    ModelPrice(input_per_1m=10.00, output_per_1m=50.00),
 }
 
+# Voyage AI embedding models (see examples/12_embeddings.py). Voyage is a SEPARATE
+# provider — Anthropic's recommended embeddings service — with its own API key.
+# Embeddings have no "output" to generate, so you only pay for the tokens you send
+# in; we keep them in their own table with a single price per 1M tokens.
+VOYAGE_EMBEDDING_PRICING: dict[str, float] = {
+    "voyage-3.5-lite": 0.02,
+    "voyage-3.5":      0.06,
+    "voyage-3-large":  0.18,
+    "voyage-code-3":   0.18,
+}
+
+
 # A note on prompt caching (a Claude feature worth knowing for cost): if you send
 # the same large prefix on many requests, you can cache it. Cached *reads* cost
 # ~0.1x the input price and cache *writes* cost ~1.25x — so repeated context gets
@@ -63,6 +75,22 @@ def estimate_cost(model: str, input_tokens: int, output_tokens: int) -> float:
     return input_cost + output_cost
 
 
+def estimate_embedding_cost(model: str, input_tokens: int) -> float:
+    """Return the estimated cost in USD for embedding `input_tokens` tokens.
+
+    Embeddings have no output tokens, so cost depends only on the input. Prices
+    are for Voyage AI (a separate provider); confirm at www.voyageai.com/pricing.
+    """
+    if model not in VOYAGE_EMBEDDING_PRICING:
+        known = ", ".join(sorted(VOYAGE_EMBEDDING_PRICING))
+        raise KeyError(
+            f"No embedding pricing on file for {model!r}. "
+            f"Known models: {known}. "
+            f"Add it to VOYAGE_EMBEDDING_PRICING in pricing.py (check the pricing page first)."
+        )
+    return input_tokens / 1_000_000 * VOYAGE_EMBEDDING_PRICING[model]
+
+
 def format_cost(usd: float) -> str:
     """Pretty-print a cost. Tiny amounts get more decimal places so they don't
     just show up as ``$0.00`` and look free (they aren't!)."""
@@ -80,3 +108,7 @@ if __name__ == "__main__":
     # The same request on the most capable model costs ~10x as much:
     big = estimate_cost("claude-opus-4-8", input_tokens=1_000, output_tokens=500)
     print(f"claude-opus-4-8: 1,000 in + 500 out  ->  {format_cost(big)}")
+
+    # Embeddings (Voyage AI) are billed on input tokens only:
+    embed_cost = estimate_embedding_cost("voyage-3.5", input_tokens=1_000)
+    print(f"voyage-3.5: 1,000 in  ->  {format_cost(embed_cost)}")
