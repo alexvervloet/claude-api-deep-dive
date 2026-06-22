@@ -247,8 +247,8 @@ cost change.
 
 ## 8. Beyond the basics
 
-With the core down, here are four of the most useful next capabilities — each is
-a runnable example in the same numbered style. Every one is still just a variation
+With the core down, here are the most useful next capabilities — each is a
+runnable example in the same numbered style. Every one is still just a variation
 on "send messages, get a message."
 
 ### Streaming — get the answer as it's typed
@@ -295,6 +295,24 @@ ranks sentences against a query — including one that shares *no words* with it
 python examples/12_embeddings.py
 ```
 
+### Multi-turn conversations — the API has no memory
+Each request is stateless: Claude remembers nothing. A chatbot that "remembers"
+is just *you* re-sending the whole `messages` list every turn, appending each new
+user and assistant message (the `system` prompt stays separate). The example is a
+tiny REPL that grows that list.
+```bash
+python examples/13_conversation.py
+```
+
+### Error handling & retries — surviving the real world
+The network blips, you hit a rate limit, the service is briefly overloaded (529).
+The SDK already retries transient failures (429/5xx/connection) with backoff; your
+job is to tune `timeout`/`max_retries` and catch the *typed* exceptions so "fix
+your request" errors are handled differently from "try again later" ones.
+```bash
+python examples/14_error_handling.py
+```
+
 ---
 
 ## Where to go next
@@ -337,4 +355,6 @@ examples/
   10_tool_use.py            ← let the model call your functions
   11_thinking.py            ← extended thinking & effort
   12_embeddings.py          ← vectors & semantic similarity (via Voyage AI)
+  13_conversation.py        ← multi-turn chat & the stateless API
+  14_error_handling.py      ← timeouts, retries & typed exceptions
 ```
