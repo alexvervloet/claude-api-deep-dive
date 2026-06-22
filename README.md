@@ -51,6 +51,11 @@ cp .env.example .env
 > a (free, unbilled) API call. So Sections 5–6 need a key, but they never cost
 > you anything. More on that below.
 
+> 🔑 **One optional extra key.** The embeddings example (Section 8) uses
+> [Voyage AI](https://www.voyageai.com/) — Anthropic's recommended embeddings
+> provider — which has its own `VOYAGE_API_KEY`. Everything else uses only your
+> `ANTHROPIC_API_KEY`. Both go in `.env`; the Voyage one is optional.
+
 ---
 
 ## 2. Your first request
@@ -279,6 +284,17 @@ is the modern replacement for the temperature/top_p knobs on the newest models.
 python examples/11_thinking.py
 ```
 
+### Embeddings — turn text into vectors for search & similarity (via Voyage AI)
+Embeddings convert text into numbers that capture *meaning*, so you can rank text
+by similarity — the foundation of semantic search and RAG. **Anthropic has no
+first-party embeddings endpoint and recommends [Voyage AI](https://www.voyageai.com/)**,
+a separate provider with its own SDK (`voyageai`) and key (`VOYAGE_API_KEY`). The
+realistic picture of a Claude app: Claude reasons, Voyage embeds. The example
+ranks sentences against a query — including one that shares *no words* with it.
+```bash
+python examples/12_embeddings.py
+```
+
 ---
 
 ## Where to go next
@@ -320,4 +336,5 @@ examples/
   09_structured_outputs.py  ← guaranteed schema-conformant JSON
   10_tool_use.py            ← let the model call your functions
   11_thinking.py            ← extended thinking & effort
+  12_embeddings.py          ← vectors & semantic similarity (via Voyage AI)
 ```
