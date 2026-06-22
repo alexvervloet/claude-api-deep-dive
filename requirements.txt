@@ -6,3 +6,9 @@ anthropic>=0.40.0
 
 # Loads variables from a .env file (like ANTHROPIC_API_KEY) into the environment.
 python-dotenv>=1.0.0
+
+# Voyage AI's SDK — used ONLY by the embeddings example (examples/12_embeddings.py).
+# Anthropic has no first-party embeddings endpoint and recommends Voyage, a
+# separate provider with its own VOYAGE_API_KEY. Optional if you skip example 12.
+voyageai>=0.3.0
+
