@@ -7,6 +7,15 @@ anthropic>=0.111.0
 # Loads variables from a .env file (like ANTHROPIC_API_KEY) into the environment.
 python-dotenv>=1.0.0
 
+# Pydantic models define + validate the structured outputs in examples 15 and
+# extract.py. The Anthropic SDK turns a model into the output format and returns
+# a validated instance on `.parsed_output`. (Pydantic v2.)
+pydantic>=2.0.0
+
+# rich renders Markdown, syntax-highlighted code, and tables in the terminal —
+# used by example 16 and extract.py to format model output nicely.
+rich>=13.0.0
+
 # Voyage AI's SDK — used ONLY by the embeddings example (examples/12_embeddings.py).
 # Anthropic has no first-party embeddings endpoint and recommends Voyage, a
 # separate provider with its own VOYAGE_API_KEY. Optional if you skip example 12.
