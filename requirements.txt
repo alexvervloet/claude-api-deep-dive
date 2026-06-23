@@ -21,3 +21,8 @@ rich>=13.0.0
 # separate provider with its own VOYAGE_API_KEY. Optional if you skip example 12.
 voyageai>=0.3.0
 
+# FastAPI + uvicorn power the streaming_server.py capstone. FastAPI handles
+# the HTTP layer; uvicorn is the ASGI server that runs it.
+fastapi>=0.100.0
+uvicorn[standard]>=0.20.0
+
