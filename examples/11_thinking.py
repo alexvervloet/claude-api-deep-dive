@@ -2,10 +2,9 @@
 Example 11 — extended thinking & effort.
 ========================================
 
-This is the most distinctly *Claude* capability, and a good note to end on. On
-hard problems you can let the model **think before it answers** — work through
-intermediate reasoning in dedicated `thinking` blocks — and you control how much
-effort it spends.
+This is the most distinctly *Claude* capability. On hard problems you can let the
+model **think before it answers** — work through intermediate reasoning in
+dedicated `thinking` blocks — and you control how much effort it spends.
 
 Two parameters:
 
