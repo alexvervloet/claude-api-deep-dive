@@ -215,7 +215,7 @@ which is why **choosing the right model is part of prompt engineering.**
 
 ---
 
-## 7. The capstone: `ask.py`
+## 7. The first capstone: `ask.py`
 
 Everything above comes together in one tool: ask a question about a code file,
 see the token count and estimated cost *before* you spend, get the answer, and
@@ -343,27 +343,33 @@ python examples/17_sse.py
 
 ---
 
-## Where to go next
+## 9. The second capstone: `extract.py`
 
-You've now covered the essentials and the most common extensions. Further on:
+Where `ask.py` returns *prose*, `extract.py` returns *data*. Point it at messy
+free-form text and it pulls out a clean, typed, **validated** structure — then
+shows it as a Markdown summary and a real table. It's where examples 15
+(Pydantic) and 16 (rich) earn their keep on a realistic task.
 
-- **Prompt caching** — cache a large, repeated prefix so you pay ~0.1× for it on
-  later requests (up to ~90% cheaper). The single biggest cost lever for
-  context-heavy apps — and a natural follow-on to this repo's cost theme.
-- **Vision** — pass images (and PDFs) to Claude as content blocks alongside text.
-- **Citations** — have Claude cite the exact source spans it used from documents
-  you provide.
-- **The Batch API** — submit many requests asynchronously at 50% off, for
-  non-latency-sensitive work.
-- **Agents & MCP** — multi-step tool-using loops, and connecting Claude to
-  external tools through the Model Context Protocol.
+```bash
+# See tokens + cost first — the counting call is free:
+python hands_on/extract.py snippets/meeting_notes.txt --dry-run
 
-Each of these slots neatly on top of the "send messages, get a message" idea you
-started with.
+# Extract action items (owner, due date, inferred priority) into a table:
+python hands_on/extract.py snippets/meeting_notes.txt
+
+# Want the raw validated JSON instead? (e.g. to pipe into another tool)
+python hands_on/extract.py snippets/meeting_notes.txt --json
+```
+
+Read the source in [hands_on/extract.py](hands_on/extract.py): the `Extraction` / `ActionItem`
+Pydantic models *are* the schema Claude must follow, and `render()` is the rich
+table. **Suggested exercise:** point it at your own meeting notes or an email, or
+change the models to extract something else entirely (contacts, invoice line
+items) — the prompt barely changes.
 
 ---
 
-## 10. Capstone: `streaming_server.py`
+## 10. The third capstone: `streaming_server.py`
 
 Where `ask.py` and `extract.py` are CLI tools, `streaming_server.py` is a web
 service. It's a FastAPI backend that streams Claude responses to a browser over
@@ -390,29 +396,24 @@ immediately — no wasted tokens.
 
 ---
 
-## 9. A second mini-project: `extract.py`
+## Where to go next
 
-Where `ask.py` returns *prose*, `extract.py` returns *data*. Point it at messy
-free-form text and it pulls out a clean, typed, **validated** structure — then
-shows it as a Markdown summary and a real table. It's where examples 15
-(Pydantic) and 16 (rich) earn their keep on a realistic task.
+You've now covered the essentials, the most common extensions, and three capstone
+projects. Further on:
 
-```bash
-# See tokens + cost first — the counting call is free:
-python hands_on/extract.py snippets/meeting_notes.txt --dry-run
+- **Prompt caching** — cache a large, repeated prefix so you pay ~0.1× for it on
+  later requests (up to ~90% cheaper). The single biggest cost lever for
+  context-heavy apps — and a natural follow-on to this repo's cost theme.
+- **Vision** — pass images (and PDFs) to Claude as content blocks alongside text.
+- **Citations** — have Claude cite the exact source spans it used from documents
+  you provide.
+- **The Batch API** — submit many requests asynchronously at 50% off, for
+  non-latency-sensitive work.
+- **Agents & MCP** — multi-step tool-using loops, and connecting Claude to
+  external tools through the Model Context Protocol.
 
-# Extract action items (owner, due date, inferred priority) into a table:
-python hands_on/extract.py snippets/meeting_notes.txt
-
-# Want the raw validated JSON instead? (e.g. to pipe into another tool)
-python hands_on/extract.py snippets/meeting_notes.txt --json
-```
-
-Read the source in [hands_on/extract.py](hands_on/extract.py): the `Extraction` / `ActionItem`
-Pydantic models *are* the schema Claude must follow, and `render()` is the rich
-table. **Suggested exercise:** point it at your own meeting notes or an email, or
-change the models to extract something else entirely (contacts, invoice line
-items) — the prompt barely changes.
+Each of these slots neatly on top of the "send messages, get a message" idea you
+started with.
 
 ---
 
