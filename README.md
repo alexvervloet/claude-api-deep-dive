@@ -8,7 +8,9 @@ counting, cost, and the things that make Claude *Claude* — tool use and extend
 thinking.
 
 This repo is meant to be *walked through*, not just read. Each section ends with
-something to run. Do the running — that's where the learning is.
+something to run. Do the running — that's where the learning is. And once a
+section clicks, [EXERCISES.md](EXERCISES.md) has a quick predict-then-run prompt
+for it: committing to an answer *before* you run is what makes it stick.
 
 ---
 
@@ -449,6 +451,7 @@ at the line.
 
 ```
 check_setup.py              ← run first: verifies Python, packages, and your key
+EXERCISES.md                ← active-recall prompts, one per README section
 hands_on/
   ask.py                    ← capstone CLI: ask a question about a code file
   extract.py                ← capstone CLI: extract validated data from free text
