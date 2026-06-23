@@ -9,7 +9,7 @@ Two pieces, with an important distinction between them:
     Free, but not offline — Claude has no local tokenizer (no `tiktoken`), so it
     needs your key and a network round-trip. It is not billed and uses none of
     your output budget.
-  - Estimating cost is **pure local math** (pricing.py) — multiply the token
+  - Estimating cost is **pure local math** (utils/pricing.py) — multiply the token
     count by the model's price. No network, no key.
 
 Run it (needs your key for the free counting call):
@@ -25,15 +25,15 @@ It shows three things:
 import os
 import sys
 
-# Make the repo-root modules (pricing.py, tokens.py) importable no matter what
-# directory you run this from.
+# Make the repo-root modules (utils/pricing.py, utils/tokens.py) importable no
+# matter what directory you run this from.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import anthropic
 from dotenv import load_dotenv
 
-from pricing import PRICING, estimate_cost, format_cost
-from tokens import count_message_tokens, count_tokens
+from utils.pricing import PRICING, estimate_cost, format_cost
+from utils.tokens import count_message_tokens, count_tokens
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):

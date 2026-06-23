@@ -37,13 +37,13 @@ import os
 import sys
 from collections.abc import Sequence
 
-# Make the repo-root modules (pricing.py) importable no matter where you run from.
+# Make the repo-root modules (utils/pricing.py) importable no matter where you run from.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import voyageai
 from dotenv import load_dotenv
 
-from pricing import estimate_embedding_cost, format_cost
+from utils.pricing import estimate_embedding_cost, format_cost
 
 load_dotenv()
 if not os.getenv("VOYAGE_API_KEY"):
