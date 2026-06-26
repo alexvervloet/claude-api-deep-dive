@@ -459,6 +459,11 @@ projects. Further on:
   non-latency-sensitive work.
 - **Agents & MCP** — multi-step tool-using loops, and connecting Claude to
   external tools through the Model Context Protocol.
+- **Local & self-hosted models** — Claude is hosted-only, but the API skill
+  transfers: open-weight models (Llama, Mistral) run on your own hardware for
+  privacy or cost, and local runtimes like Ollama speak an OpenAI-compatible API,
+  so the same client code reaches them (see the OpenAI repo's local-serving
+  example). Same "send messages, get a message" shape, a different `base_url`.
 - **RAG at scale** — the `rag.py` capstone re-embeds a handful of facts on every
   run. Real systems embed once into a **vector database**, **chunk** long
   documents, and add **reranking** and **evaluation** — enough moving parts to be
@@ -487,6 +492,29 @@ rest, by the error you see:
 Still stuck? Every example is small and self-contained — open the file, read the
 docstring at the top, and run it directly. The error message almost always points
 at the line.
+
+---
+
+## From teaching code to production
+
+Every example here takes shortcuts that are perfect for learning and wrong for a
+real deployment. Here's the map from each shortcut to what production uses:
+
+| This repo's teaching shortcut | In production |
+|-------------------------------|---------------|
+| The answer goes to `print()` | One **structured trace** per request — id, timing, input/output tokens — you can search after the fact |
+| `estimate_cost()` just prints a number | An enforced **budget** that refuses the call before it overspends |
+| A bare `client.messages.create(...)` | The call wrapped in **retries + backoff** and a **circuit breaker** for 429s/overloaded/timeouts |
+| Every call hits the API | A **response cache** so repeat questions cost nothing |
+| Model id and `system=` prompt are string literals in the script | **Versioned prompts/models** behind config, promoted only past an **eval gate** |
+| You trust whatever the model returns | **Input/output guardrails** on the request path |
+
+These shortcuts are right for learning and wrong for production. All seven
+concerns — observability, cost, reliability, caching, guardrails, prompt
+versioning, and eval gates — are built from scratch and wired into one running
+app in **[Production](https://github.com/Ailuue/ai-in-production-deep-dive)** (#8 in the
+series). It runs **offline on a mock provider**, so you can see the whole ops
+machinery with no key and no cost.
 
 ---
 
@@ -525,3 +553,24 @@ examples/
   16_rich_output.py         ← Markdown, tables & code blocks in the terminal
   17_sse.py                 ← SSE protocol: raw events, timing, partial accumulation
 ```
+
+---
+
+## The series
+
+This is one of eight standalone, hands-on deep dives into building with LLM APIs.
+Each one stands on its own — its own setup, examples, and capstone — and they all
+share the same house style: provider-agnostic, built from scratch (no
+frameworks), offline-first examples, and a real capstone. Do them in any order;
+this sequence builds naturally:
+
+1. [OpenAI API](https://github.com/Ailuue/openai-api-deep-dive) — the API from zero
+2. [Claude API](https://github.com/Ailuue/claude-api-deep-dive) — the same ideas, the Anthropic way
+3. [Prompt Engineering](https://github.com/Ailuue/prompt-engineering-deep-dive) — shape model behavior with better prompts (zero/few-shot, chain-of-thought, roles)
+4. [RAG](https://github.com/Ailuue/rag-deep-dive) — answer questions over your own documents
+5. [Evals](https://github.com/Ailuue/evals-deep-dive) — measure whether a change actually helps
+6. [Agents](https://github.com/Ailuue/agents-deep-dive) — give a model tools and a loop so it can act
+7. [Prompt Injection & Guardrails](https://github.com/Ailuue/prompt-injection-deep-dive) — attack and defend all of the above
+8. [Production](https://github.com/Ailuue/ai-in-production-deep-dive) — operate one app end to end: observability, cost, reliability, caching, guardrails, prompt versioning, eval gates
+
+**You are here: #2 — Claude API.**
