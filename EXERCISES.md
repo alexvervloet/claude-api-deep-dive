@@ -237,6 +237,48 @@ why chat UIs stream. (Streaming is also the recommended way to do long generatio
 since it dodges request timeouts.)
 </details>
 
+**Recall (vision, `18_vision.py`).** A text request sends a string for `content`.
+What does an image request send, and what are the two `source` types?
+
+<details><summary>▸ Answer</summary>
+
+A **list of blocks** — a `text` block and an `image` block — in one user message.
+The image `source` is either `{"type": "url", ...}` (Claude fetches it) or
+`{"type": "base64", "media_type": ..., "data": ...}` (you inline the bytes). The
+image is billed as input tokens, scaled by its pixel size.
+</details>
+
+**Recall (batch, `19_batch_api.py`).** What do you trade for the Batch API's 50%
+discount, and why must you match results by `custom_id` rather than position?
+
+<details><summary>▸ Answer</summary>
+
+You trade **immediacy** — results land within 24h (usually <1h) instead of
+instantly. Results come back in **any order**, so the only reliable way to tie an
+answer to its request is the `custom_id` you set on each `Request`.
+</details>
+
+**Predict (caching, `20_prompt_caching.py`).** On the second call, `cache_read_input_tokens`
+jumps from 0 to a big number. Why — and what would make it stay 0?
+
+<details><summary>▸ Answer</summary>
+
+The first call **wrote** the long system prefix to the cache; the second call's
+prefix is byte-for-byte identical, so it's **read** from cache (~0.1× price). It
+stays 0 if the prefix changes between calls (a silent invalidator) or is under the
+model's minimum cacheable size (≈4096 tokens on Haiku) — caching is a prefix match.
+</details>
+
+**Do (async, `21_async_concurrency.py`).** It runs 6 prompts sequentially, then
+4-at-a-time. Why is the concurrent run faster, and what is the `Semaphore` for?
+
+<details><summary>▸ Answer</summary>
+
+Each request is mostly **idle network waiting**, so overlapping them finishes in
+about the time of the slowest call. The `Semaphore` caps how many run at once, so
+you get the speedup without blowing past your account's **rate limit**.
+</details>
+
 ---
 
 ## Capstones 9, 10 & 11
