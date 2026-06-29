@@ -350,6 +350,42 @@ at the raw level, plus per-token timing and partial response accumulation.
 python examples/17_sse.py
 ```
 
+### Vision — send an image, not just text
+Claude is multimodal: the user `content` becomes a *list of blocks* (a `text` block
++ an `image` block), where the image is either a URL Claude fetches or a local file
+sent as base64 with a `media_type`. Images are billed as input tokens, scaled by
+pixel size. (Claude *reads* images; it doesn't generate them.)
+```bash
+python examples/18_vision.py            # or: python examples/18_vision.py my_image.png
+```
+
+### The Batch API — half price for non-urgent work
+For work that isn't interactive (classify 10k reviews, summarize a backlog), submit
+many `Request`s at once and get results within 24h (usually <1h) at **50% off**. Poll
+`processing_status` until `"ended"`, then stream results — keyed by `custom_id`,
+since they come back in any order.
+```bash
+python examples/19_batch_api.py
+```
+
+### Prompt caching — don't re-pay for a repeated prefix
+Mark a stable block with `cache_control={"type": "ephemeral"}`: the first request
+writes it (~1.25×), later identical-prefix requests read it at ~0.1× and faster. It's
+a prefix match — keep the constant part (system prompt, tools, a document) first and
+the question last. The example shows `cache_read_input_tokens` kicking in.
+```bash
+python examples/20_prompt_caching.py
+```
+
+### Async & concurrency — many requests at once
+A single call is mostly idle waiting on the network, so independent prompts should
+run concurrently. `AsyncAnthropic` + `asyncio.gather` + a `Semaphore` (bounded
+concurrency) finishes a batch in roughly the time of the slowest call, while staying
+under your rate limit. The example times sequential vs. concurrent.
+```bash
+python examples/21_async_concurrency.py
+```
+
 ---
 
 ## 9. The second capstone: `extract.py`
@@ -552,13 +588,17 @@ examples/
   15_pydantic_validation.py ← typed, validated responses via Pydantic
   16_rich_output.py         ← Markdown, tables & code blocks in the terminal
   17_sse.py                 ← SSE protocol: raw events, timing, partial accumulation
+  18_vision.py              ← send an image (URL or local base64) alongside text
+  19_batch_api.py           ← submit many requests at 50% off, results within 24h
+  20_prompt_caching.py      ← cache_control: cache a long repeated prefix at ~0.1x
+  21_async_concurrency.py   ← AsyncAnthropic + asyncio.gather + a Semaphore (throughput)
 ```
 
 ---
 
 ## The series
 
-This is one of eight standalone, hands-on deep dives into building with LLM APIs.
+This is one of thirteen standalone, hands-on deep dives into building with LLM APIs — eight core, plus five bonus dives.
 Each one stands on its own — its own setup, examples, and capstone — and they all
 share the same house style: provider-agnostic, built from scratch (no
 frameworks), offline-first examples, and a real capstone. Do them in any order;
@@ -572,5 +612,13 @@ this sequence builds naturally:
 6. [Agents](https://github.com/Ailuue/agents-deep-dive) — give a model tools and a loop so it can act
 7. [Prompt Injection & Guardrails](https://github.com/Ailuue/prompt-injection-deep-dive) — attack and defend all of the above
 8. [Production](https://github.com/Ailuue/ai-in-production-deep-dive) — operate one app end to end: observability, cost, reliability, caching, guardrails, prompt versioning, eval gates
+
+**Bonus dives** — standalone, slotting in where they're most useful:
+
+- [Context Engineering](https://github.com/Ailuue/context-engineering-deep-dive) — manage what's in the window: memory, compaction, assembly
+- [Multimodal](https://github.com/Ailuue/multimodal-deep-dive) — images & audio, not just text
+- [Fine-tuning](https://github.com/Ailuue/fine-tuning-deep-dive) — teach a model new behavior by example
+- [MCP](https://github.com/Ailuue/mcp-deep-dive) — serve tools, data & prompts to any LLM over a standard protocol
+- [Local Models](https://github.com/Ailuue/local-models-deep-dive) — run open-weight models on your own machine
 
 **You are here: #2 — Claude API.**
