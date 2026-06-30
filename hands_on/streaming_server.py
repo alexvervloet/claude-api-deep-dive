@@ -70,8 +70,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 import anthropic
 from anthropic import AsyncAnthropic
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi import FastAPI, Request  # type: ignore[import-untyped]
+from fastapi.responses import FileResponse, StreamingResponse  # type: ignore[import-untyped]
 from pydantic import BaseModel
 
 load_dotenv()
@@ -148,6 +148,7 @@ async def _stream_tokens(request: Request, body: StreamRequest):
     # After the first token, we don't retry — partial output would be confusing.
     last_exc: Exception | None = None
     stream_context = None
+    stream = None
 
     for attempt in range(3):
         try:
@@ -158,7 +159,7 @@ async def _stream_tokens(request: Request, body: StreamRequest):
                 messages=[{"role": "user", "content": body.prompt}],
             )
             # __aenter__ actually sends the request; errors surface here.
-            await stream_context.__aenter__()
+            stream = await stream_context.__aenter__()
             break
         except (anthropic.RateLimitError, anthropic.APIConnectionError) as exc:
             last_exc = exc
@@ -175,9 +176,11 @@ async def _stream_tokens(request: Request, body: StreamRequest):
         yield _error_event(f"Could not reach the API after 3 attempts: {last_exc}")
         return
 
+    assert stream is not None
+
     # --- Phase 2: stream tokens to the client ---
     try:
-        async for text in stream_context.text_stream:
+        async for text in stream.text_stream:
             # Check for client disconnect before each yield.
             if await request.is_disconnected():
                 await stream_context.__aexit__(None, None, None)
