@@ -198,7 +198,7 @@ def main(argv: list[str]) -> int:
                 file=sys.stderr,
             )
             return 1
-        import voyageai
+        import voyageai  # type: ignore[import-untyped]
         vo = voyageai.Client()  # pyright: ignore[reportPrivateImportUsage]
 
         k = max(1, min(args.top_k, len(KNOWLEDGE_BASE)))
