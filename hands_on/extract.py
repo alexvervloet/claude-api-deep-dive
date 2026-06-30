@@ -204,7 +204,7 @@ def main(argv: list[str]) -> int:
         model=args.model,
         max_tokens=args.max_tokens,
         system=SYSTEM_PROMPT,
-        messages=messages,
+        messages=messages,  # type: ignore[arg-type]
         output_format=Extraction,
     )
 
