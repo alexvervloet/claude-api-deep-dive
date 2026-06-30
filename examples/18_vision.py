@@ -77,7 +77,7 @@ messages: list[MessageParam] = [
         "role": "user",
         "content": [
             {"type": "text", "text": "Describe this image in two sentences. What stands out?"},
-            image_block,
+            image_block,  # type: ignore[list-item]
         ],
     }
 ]
