@@ -41,8 +41,8 @@ if not os.getenv("ANTHROPIC_API_KEY"):
 
 client = anthropic.Anthropic()
 
-# A stable, public sample image: a wooden boardwalk crossing a green marsh.
-SAMPLE_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/640px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"
+# A stable, public sample image: GitHub's Octocat mascot.
+SAMPLE_URL = "https://avatars.githubusercontent.com/u/583231?v=4"
 
 
 def image_block_from_path(path: str) -> dict:
