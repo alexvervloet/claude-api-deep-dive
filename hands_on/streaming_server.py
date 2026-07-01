@@ -37,7 +37,7 @@ Each event the server sends is a JSON object on a `data:` line:
 
     data: {"type": "token",   "text": " world"}
 
-    data: {"type": "done",    "tokens": 42, "elapsed": 1.23}
+    data: {"type": "done",    "tokens": 42, "chunks": 7, "elapsed": 1.23}
 
     data: {"type": "error",   "message": "...", "partial": "...so far..."}
 
@@ -59,6 +59,7 @@ Claude's richer event types (message_start, content_block_delta, etc.).
 
 import asyncio
 import json
+import logging
 import os
 import sys
 import time
@@ -78,6 +79,9 @@ load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
     sys.exit("Set ANTHROPIC_API_KEY in .env and try again.")
 
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
+logger = logging.getLogger("streaming_server")
+
 # Async client — essential for FastAPI so the event loop isn't blocked while
 # waiting for the API. Each request gets its own concurrent slot.
 async_client = AsyncAnthropic()
@@ -91,6 +95,7 @@ STATIC_DIR = Path(__file__).parent / "static"
 # Request model
 # ---------------------------------------------------------------------------
 
+
 class StreamRequest(BaseModel):
     prompt: str
     model: str = "claude-haiku-4-5"
@@ -101,11 +106,14 @@ class StreamRequest(BaseModel):
 # SSE event helpers
 # ---------------------------------------------------------------------------
 
+
 def _token_event(text: str) -> str:
     return f"data: {json.dumps({'type': 'token', 'text': text})}\n\n"
 
-def _done_event(tokens: int, elapsed: float) -> str:
-    return f"data: {json.dumps({'type': 'done', 'tokens': tokens, 'elapsed': round(elapsed, 2)})}\n\n"
+
+def _done_event(tokens: int, chunks: int, elapsed: float) -> str:
+    return f"data: {json.dumps({'type': 'done', 'tokens': tokens, 'chunks': chunks, 'elapsed': round(elapsed, 2)})}\n\n"
+
 
 def _error_event(message: str, partial: str = "") -> str:
     payload: dict = {"type": "error", "message": message}
@@ -118,6 +126,7 @@ def _error_event(message: str, partial: str = "") -> str:
 # Core streaming generator
 # ---------------------------------------------------------------------------
 
+
 async def _stream_tokens(request: Request, body: StreamRequest):
     """
     Async generator that calls the Claude API and yields SSE events.
@@ -129,8 +138,10 @@ async def _stream_tokens(request: Request, body: StreamRequest):
        don't retry (partial output would confuse the client).
 
     2. Disconnect detection — `request.is_disconnected()` is polled each
-       iteration. On disconnect we `return` early, which causes the
-       StreamingResponse to close its socket and abort the API call.
+       iteration as a fallback, but in practice Starlette's StreamingResponse
+       notices the closed socket first and cancels this generator outright
+       (caught below as `asyncio.CancelledError`). Either path aborts the
+       Claude call instead of letting it run to completion unread.
 
     3. Partial response — we accumulate tokens into `partial` so that if an
        error occurs mid-stream, the error event includes what was received.
@@ -164,7 +175,7 @@ async def _stream_tokens(request: Request, body: StreamRequest):
         except (anthropic.RateLimitError, anthropic.APIConnectionError) as exc:
             last_exc = exc
             if attempt < 2:
-                await asyncio.sleep(1.0 * (2 ** attempt))
+                await asyncio.sleep(1.0 * (2**attempt))
         except anthropic.AuthenticationError as exc:
             yield _error_event(f"Authentication failed: {exc}")
             return
@@ -183,12 +194,25 @@ async def _stream_tokens(request: Request, body: StreamRequest):
         async for text in stream.text_stream:
             # Check for client disconnect before each yield.
             if await request.is_disconnected():
+                logger.info(
+                    "client disconnected after %d chunks — aborting Claude call",
+                    len(partial),
+                )
                 await stream_context.__aexit__(None, None, None)
                 return  # generator closes → StreamingResponse cleans up
 
             partial.append(text)
             yield _token_event(text)
 
+    except asyncio.CancelledError:
+        # The usual disconnect path: StreamingResponse notices the closed
+        # socket and cancels this generator before the is_disconnected()
+        # check above gets a chance to run.
+        logger.info(
+            "client disconnected after %d chunks — aborting Claude call",
+            len(partial),
+        )
+        raise
     except (anthropic.RateLimitError, anthropic.APIConnectionError) as exc:
         yield _error_event(str(exc), partial="".join(partial))
         return
@@ -204,12 +228,19 @@ async def _stream_tokens(request: Request, body: StreamRequest):
 
     # --- Phase 3: final stats event ---
     elapsed = time.perf_counter() - start
-    yield _done_event(tokens=len(partial), elapsed=elapsed)
+    # len(partial) counts SSE text chunks, not LLM tokens — a single chunk can
+    # contain several tokens. get_final_message() gives the real output token
+    # count from the API's usage stats.
+    final_message = await stream.get_final_message()
+    yield _done_event(
+        tokens=final_message.usage.output_tokens, chunks=len(partial), elapsed=elapsed
+    )
 
 
 # ---------------------------------------------------------------------------
 # Routes
 # ---------------------------------------------------------------------------
+
 
 @app.get("/")
 async def serve_ui():
