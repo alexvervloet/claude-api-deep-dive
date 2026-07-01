@@ -66,6 +66,24 @@ console.print(Markdown(answer))
 
 # --- 2. Syntax-highlight a code block -------------------------------------------
 # When the answer IS code, Syntax highlights it for the given language.
+#
+# The snippet below is hard-coded so this section can demonstrate Syntax() in
+# isolation, without a network call. In real use you won't call Syntax() on a
+# hard-coded string — the code comes from Claude's response, in one of two ways:
+#
+#   1. Markdown(answer) already handles it. If the response contains fenced
+#      code blocks (```python ... ```), rich's Markdown renderer detects the
+#      language tag and syntax-highlights the block automatically — see
+#      section 1 above. No extraction needed; this covers most chat-style use.
+#   2. Extract it yourself when you need the code apart from the surrounding
+#      prose — to save it to a file, execute it, or highlight it standalone:
+#
+#          import re
+#          for lang, code in re.findall(r"```(\w+)?\n(.*?)```", answer, re.DOTALL):
+#              console.print(Syntax(code, lang or "text", theme="monokai"))
+#
+#      findall() returns one (language, code) tuple per fenced block, since a
+#      single answer can contain several.
 snippet = '''def greet(name: str) -> str:
     """Return a friendly greeting."""
     return f"Hello, {name}!"
