@@ -28,6 +28,8 @@ Run it:
 
     python examples/19_batch_api.py            # create a batch
     python examples/19_batch_api.py <batch_id> # check status / fetch results
+
+    python examples/19_batch_api.py msgbatch_013HFWXDBXqAdrbDUDbjvTNT
 """
 
 import os
@@ -69,7 +71,9 @@ def create_batch() -> str:
 
     batch = client.messages.batches.create(requests=requests)
     print(f"[created batch: {batch.id}  status={batch.processing_status}]")
-    print("\nThe batch is now processing (50% cheaper than live calls). Check on it with:")
+    print(
+        "\nThe batch is now processing (50% cheaper than live calls). Check on it with:"
+    )
     print(f"    python examples/19_batch_api.py {batch.id}")
     return batch.id
 
@@ -77,18 +81,24 @@ def create_batch() -> str:
 def check_batch(batch_id: str) -> None:
     batch = client.messages.batches.retrieve(batch_id)
     counts = batch.request_counts
-    print(f"status: {batch.processing_status}   "
-          f"(succeeded={counts.succeeded}, errored={counts.errored}, processing={counts.processing})")
+    print(
+        f"status: {batch.processing_status}   "
+        f"(succeeded={counts.succeeded}, errored={counts.errored}, processing={counts.processing})"
+    )
 
     if batch.processing_status != "ended":
-        print("Not finished yet — batches run within 24h (usually <1h). Re-run this to check again.")
+        print(
+            "Not finished yet — batches run within 24h (usually <1h). Re-run this to check again."
+        )
         return
 
     # --- Stream results. They arrive in ANY order, so key by custom_id. ---
     print("\nResults:")
     for result in client.messages.batches.results(batch_id):
         if result.result.type == "succeeded":
-            text = next((b.text for b in result.result.message.content if b.type == "text"), "")
+            text = next(
+                (b.text for b in result.result.message.content if b.type == "text"), ""
+            )
             print(f"  {result.custom_id}: {text.strip()}")
         else:
             print(f"  {result.custom_id}: [{result.result.type}]")
