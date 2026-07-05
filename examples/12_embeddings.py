@@ -27,9 +27,9 @@ How we measure "similar": **cosine similarity** — the cosine of the angle betw
 two vectors. It ranges from -1 (opposite) to 1 (identical direction). Closer to 1
 means more similar in meaning. We compute it by hand, no math libraries needed.
 
-Run it (needs VOYAGE_API_KEY in .env):
+Run it (needs VOYAGE_API_KEY; load via secrun, see SECRETS.md):
 
-    python examples/12_embeddings.py
+    secrun python examples/12_embeddings.py
 """
 
 import math
@@ -48,7 +48,7 @@ from utils.pricing import estimate_embedding_cost, format_cost
 load_dotenv()
 if not os.getenv("VOYAGE_API_KEY"):
     sys.exit(
-        "Set VOYAGE_API_KEY in .env (get one at https://www.voyageai.com/). "
+        "Set VOYAGE_API_KEY via secrun — see SECRETS.md (get one at https://www.voyageai.com/). "
         "This example uses Voyage AI, not Anthropic — see the docstring."
     )
 
