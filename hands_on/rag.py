@@ -41,16 +41,16 @@ dive picks up.
 Examples
 --------
   # Answer the built-in demo question from the knowledge base
-  python hands_on/rag.py
+  secrun python hands_on/rag.py
 
   # Ask your own question
-  python hands_on/rag.py "Can I get a refund?"
+  secrun python hands_on/rag.py "Can I get a refund?"
 
   # See the contrast: same question, but with NO retrieved context
-  python hands_on/rag.py "How long are deleted notes kept?" --no-rag
+  secrun python hands_on/rag.py "How long are deleted notes kept?" --no-rag
 
   # Retrieve more documents, and print the exact prompt that gets sent
-  python hands_on/rag.py "What are the plans?" -k 5 --show-prompt
+  secrun python hands_on/rag.py "What are the plans?" -k 5 --show-prompt
 """
 
 import argparse
@@ -222,8 +222,8 @@ def main(argv: list[str]) -> int:
     # --- Generation needs the Anthropic key. ---
     if not os.getenv("ANTHROPIC_API_KEY"):
         print(
-            "ANTHROPIC_API_KEY is not set. Copy .env.example to .env and add "
-            "your key.",
+            "ANTHROPIC_API_KEY is not set. Store it in your keychain and run under `secrun` "
+            "(see SECRETS.md).",
             file=sys.stderr,
         )
         return 1
