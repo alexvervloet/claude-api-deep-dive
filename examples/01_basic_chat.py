@@ -5,7 +5,7 @@ Example 01 — Your first message.
 The whole API in a few lines. You send a list of messages; you get back a
 message. Run it:
 
-    python examples/01_basic_chat.py
+    secrun python examples/01_basic_chat.py
 
 What to notice:
   - `client = anthropic.Anthropic()` reads your key from the ANTHROPIC_API_KEY
@@ -28,7 +28,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
-    sys.exit("Set ANTHROPIC_API_KEY (copy .env.example to .env) and try again.")
+    sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
 
 client = anthropic.Anthropic()
 
