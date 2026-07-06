@@ -21,7 +21,7 @@ Claude Opus 4.8, Claude Fable 5 — have removed. It still works on Claude Haiku
 
 Run it:
 
-    python examples/05_top_p.py
+    secrun python examples/05_top_p.py
 """
 
 import os
@@ -32,7 +32,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
-    sys.exit("Set ANTHROPIC_API_KEY (copy .env.example to .env) and try again.")
+    sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
 
 client = anthropic.Anthropic()
 
