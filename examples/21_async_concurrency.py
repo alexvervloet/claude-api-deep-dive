@@ -19,7 +19,7 @@ prints both wall-clock times so you can see the speedup.
 
 Run it:
 
-    python examples/21_async_concurrency.py
+    secrun python examples/21_async_concurrency.py
 """
 
 import asyncio
@@ -32,7 +32,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
-    sys.exit("Set ANTHROPIC_API_KEY (copy .env.example to .env) and try again.")
+    sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
 
 client = anthropic.AsyncAnthropic()
 
