@@ -13,7 +13,7 @@ like some APIs), and the default is 1.0.
 
 Run it:
 
-    python examples/03_temperature.py
+    secrun python examples/03_temperature.py
 
 We ask the same creative question at three temperatures. Notice how 0.0 tends to
 repeat itself across runs while 1.0 reinvents the answer each time.
@@ -36,7 +36,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
-    sys.exit("Set ANTHROPIC_API_KEY (copy .env.example to .env) and try again.")
+    sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
 
 client = anthropic.Anthropic()
 
