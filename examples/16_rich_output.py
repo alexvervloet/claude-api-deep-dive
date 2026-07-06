@@ -22,7 +22,7 @@ This example needs `rich` (in requirements.txt):
 
 Run it:
 
-    python examples/16_rich_output.py
+    secrun python examples/16_rich_output.py
 """
 
 import os
@@ -37,7 +37,7 @@ from rich.table import Table
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
-    sys.exit("Set ANTHROPIC_API_KEY (copy .env.example to .env) and try again.")
+    sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
 
 client = anthropic.Anthropic()
 console = Console()  # rich's entry point; console.print() understands rich objects
