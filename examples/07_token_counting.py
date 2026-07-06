@@ -14,7 +14,7 @@ Two pieces, with an important distinction between them:
 
 Run it (needs your key for the free counting call):
 
-    python examples/07_token_counting.py
+    secrun python examples/07_token_counting.py
 
 It shows three things:
   1. How many tokens a sentence is.
@@ -37,7 +37,7 @@ from utils.tokens import count_message_tokens, count_tokens
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
-    sys.exit("Set ANTHROPIC_API_KEY (copy .env.example to .env) and try again.")
+    sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
 
 client = anthropic.Anthropic()
 
