@@ -22,7 +22,7 @@ The companion to watch is `stop_reason` — Claude's name for "why did it stop?"
 
 Run it:
 
-    python examples/04_max_tokens.py
+    secrun python examples/04_max_tokens.py
 """
 
 import os
@@ -33,7 +33,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
-    sys.exit("Set ANTHROPIC_API_KEY (copy .env.example to .env) and try again.")
+    sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
 
 client = anthropic.Anthropic()
 
