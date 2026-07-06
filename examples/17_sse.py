@@ -65,7 +65,7 @@ The capstone that puts all of this into practice is hands_on/streaming_server.py
 
 Run it:
 
-    python examples/17_sse.py
+    secrun python examples/17_sse.py
 """
 
 import json
@@ -78,7 +78,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
-    sys.exit("Set ANTHROPIC_API_KEY (copy .env.example to .env) and try again.")
+    sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
 
 client = anthropic.Anthropic()
 
