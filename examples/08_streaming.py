@@ -22,7 +22,7 @@ as a context manager:
 
 Run it:
 
-    python examples/08_streaming.py
+    secrun python examples/08_streaming.py
 """
 
 import os
@@ -33,7 +33,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
-    sys.exit("Set ANTHROPIC_API_KEY (copy .env.example to .env) and try again.")
+    sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
 
 client = anthropic.Anthropic()
 
