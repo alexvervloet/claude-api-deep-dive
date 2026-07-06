@@ -20,7 +20,7 @@ Set it once and it steers everything that follows.
 
 Run it:
 
-    python examples/02_roles.py
+    secrun python examples/02_roles.py
 
 Try editing the system prompt (e.g. "You are a grumpy pirate") and watch the tone
 of the answer change without touching the question at all. That's the power of
@@ -35,7 +35,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
-    sys.exit("Set ANTHROPIC_API_KEY (copy .env.example to .env) and try again.")
+    sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
 
 client = anthropic.Anthropic()
 
