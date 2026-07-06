@@ -24,7 +24,7 @@ Why this beats a raw dict:
 
 Run it:
 
-    python examples/15_pydantic_validation.py
+    secrun python examples/15_pydantic_validation.py
 """
 
 import os
@@ -37,7 +37,7 @@ from pydantic import BaseModel, Field
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
-    sys.exit("Set ANTHROPIC_API_KEY (copy .env.example to .env) and try again.")
+    sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
 
 client = anthropic.Anthropic()
 
