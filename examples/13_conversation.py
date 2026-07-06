@@ -23,7 +23,7 @@ Two Claude specifics to keep in mind (both from Example 02):
 
 Run it (type a few messages, then `quit`):
 
-    python examples/13_conversation.py
+    secrun python examples/13_conversation.py
 
 Try this to feel the statelessness: tell it your name, then ask "what's my
 name?". It works — because the earlier turns are still in the list. Now look at
@@ -40,7 +40,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
-    sys.exit("Set ANTHROPIC_API_KEY (copy .env.example to .env) and try again.")
+    sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
 
 client = anthropic.Anthropic()
 
