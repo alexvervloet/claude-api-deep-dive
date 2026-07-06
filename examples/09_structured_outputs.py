@@ -21,7 +21,7 @@ containing a JSON *string*, which you parse with `json.loads()`.
 
 Run it:
 
-    python examples/09_structured_outputs.py
+    secrun python examples/09_structured_outputs.py
 """
 
 import json
@@ -33,7 +33,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
-    sys.exit("Set ANTHROPIC_API_KEY (copy .env.example to .env) and try again.")
+    sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
 
 client = anthropic.Anthropic()
 
