@@ -21,10 +21,10 @@ them — image generation isn't part of the API.)
 
 Run it (uses a public sample image):
 
-    python examples/18_vision.py
+    secrun python examples/18_vision.py
 
     # or point it at your own local image (sent as base64):
-    python examples/18_vision.py path/to/image.png
+    secrun python examples/18_vision.py path/to/image.png
 """
 
 import base64
@@ -37,7 +37,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
-    sys.exit("Set ANTHROPIC_API_KEY (copy .env.example to .env) and try again.")
+    sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
 
 client = anthropic.Anthropic()
 
