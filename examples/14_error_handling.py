@@ -28,7 +28,7 @@ shadows the rest.
 
 Run it:
 
-    python examples/14_error_handling.py
+    secrun python examples/14_error_handling.py
 
 It deliberately requests a nonexistent model to show a NotFoundError being
 caught, then makes a normal call with tuned timeout/retry settings.
@@ -42,7 +42,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
-    sys.exit("Set ANTHROPIC_API_KEY (copy .env.example to .env) and try again.")
+    sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
 
 # Per-client config. `timeout` is in seconds; `max_retries` overrides the
 # default of 2. (You can also override per-call with
