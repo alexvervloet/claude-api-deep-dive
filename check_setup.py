@@ -4,7 +4,7 @@ Setup check — run this first.
 
 Before you run any example, run:
 
-    python check_setup.py
+    secrun python check_setup.py
 
 It answers one question: "Is my environment ready?" It checks your Python
 version, that the dependencies are installed, and that your API key is in place
@@ -45,7 +45,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 # Each entry: (import name, pip name, what it's for, required?)
 DEPENDENCIES = [
     ("anthropic", "anthropic", "the Claude SDK — every example needs it", True),
-    ("dotenv", "python-dotenv", "loads your API key from .env", True),
+    ("dotenv", "python-dotenv", "reads .env config (key comes from secrun)", True),
     ("pydantic", "pydantic", "validated outputs (examples 15, extract.py)", True),
     ("rich", "rich", "pretty terminal output (example 16, extract.py)", True),
     ("fastapi", "fastapi", "the streaming server capstone", True),
@@ -107,14 +107,14 @@ def check_api_key():
     if env is None:
         fail(".env file not found.")
         print("    Create it with:  cp .env.example .env")
-        print("    Then paste your key from https://console.anthropic.com/settings/keys")
+        print("    (Config only — your key loads separately via secrun; see SECRETS.md.)")
         return False
 
     # Prefer a real environment variable, fall back to the .env value.
     key = os.getenv("ANTHROPIC_API_KEY") or env.get("ANTHROPIC_API_KEY", "")
     if not key or key == "sk-ant-your-key-here":
-        fail("ANTHROPIC_API_KEY is not set (still the placeholder).")
-        print("    Open .env and replace the placeholder with your real key.")
+        fail("ANTHROPIC_API_KEY is not set.")
+        print("    Store it in your keychain and run `secrun python check_setup.py` — see SECRETS.md.")
         return False
     if not key.startswith("sk-ant-"):
         warn("ANTHROPIC_API_KEY is set but doesn't look like a Claude key "
@@ -138,7 +138,7 @@ def main():
     print()
     if all(results):
         print(_c("All set! 🎉", "1;32"))
-        print("Start here:  python examples/01_basic_chat.py")
+        print("Start here:  secrun python examples/01_basic_chat.py")
         return 0
     print(_c("Not ready yet — fix the ✗ items above, then run this again.", "1;31"))
     print("(The ! items are optional and safe to ignore for now.)")
