@@ -26,10 +26,10 @@ the batch id and shows you how to check on it. Re-run with the id to poll & fetc
 
 Run it:
 
-    python examples/19_batch_api.py            # create a batch
-    python examples/19_batch_api.py <batch_id> # check status / fetch results
+    secrun python examples/19_batch_api.py            # create a batch
+    secrun python examples/19_batch_api.py <batch_id> # check status / fetch results
 
-    python examples/19_batch_api.py msgbatch_013HFWXDBXqAdrbDUDbjvTNT
+    secrun python examples/19_batch_api.py msgbatch_013HFWXDBXqAdrbDUDbjvTNT
 """
 
 import os
@@ -42,7 +42,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
-    sys.exit("Set ANTHROPIC_API_KEY (copy .env.example to .env) and try again.")
+    sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
 
 client = anthropic.Anthropic()
 
@@ -74,7 +74,7 @@ def create_batch() -> str:
     print(
         "\nThe batch is now processing (50% cheaper than live calls). Check on it with:"
     )
-    print(f"    python examples/19_batch_api.py {batch.id}")
+    print(f"    secrun python examples/19_batch_api.py {batch.id}")
     return batch.id
 
 
