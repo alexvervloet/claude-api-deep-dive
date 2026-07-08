@@ -84,8 +84,8 @@ def count_message_tokens(
 
 
 if __name__ == "__main__":
-    # Run `python utils/tokens.py` to see token counting in action.
-    # This makes a (free) API call, so it needs your key in .env.
+    # Run `secrun python utils/tokens.py` to see token counting in action.
+    # This makes a (free) API call, so it needs your key in the environment (via secrun).
     import os
     import sys
 
@@ -93,7 +93,7 @@ if __name__ == "__main__":
 
     load_dotenv()
     if not os.getenv("ANTHROPIC_API_KEY"):
-        sys.exit("Set ANTHROPIC_API_KEY (copy .env.example to .env) and try again.")
+        sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
 
     client = anthropic.Anthropic()
 
