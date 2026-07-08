@@ -110,7 +110,7 @@ uses no output budget) and **exact**. The trade-off: it needs your key and a
 network round-trip, and you get back a *count*, not the individual token pieces.
 </details>
 
-**Do.** Run `python utils/tokens.py`, then edit the `sample` string to add your
+**Do.** Run `secrun python utils/tokens.py`, then edit the `sample` string to add your
 system prompt's worth of text. Watch the count climb. Why does the system prompt
 count toward your *input* tokens even though it isn't in the `messages` list?
 
@@ -299,7 +299,7 @@ further tokens generated, nothing billed for output you'd never see. Detecting
 disconnects is a real production cost lever, not just tidiness.
 </details>
 
-**Predict, then run (`rag.py`).** Run `python hands_on/rag.py`, then run it again
+**Predict, then run (`rag.py`).** Run `secrun python hands_on/rag.py`, then run it again
 with `--no-rag`. Will the answer change? Which one can you trust, and why?
 
 <details><summary>▸ Answer</summary>
