@@ -42,13 +42,13 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Add your API key
-cp .env.example .env
-#    ...then open .env and paste your key from
-#    https://console.anthropic.com/settings/keys
+# 3. Set up your API key (it does NOT go in .env)
+cp .env.example .env               # optional; holds no secrets
+#    Store your key in your OS keychain and run scripts with `secrun` — 2-minute
+#    setup in ../SECRETS.md. Get a key: https://console.anthropic.com/settings/keys
 
 # 4. Confirm everything is wired up correctly (makes no API call, costs nothing)
-python check_setup.py
+secrun python check_setup.py
 ```
 
 `check_setup.py` is your first stop if anything goes wrong: it checks your Python
@@ -70,7 +70,7 @@ Green across the board means you're ready for Section 2.
 ## 2. Your first request
 
 ```bash
-python examples/01_basic_chat.py
+secrun python examples/01_basic_chat.py
 ```
 
 Open [examples/01_basic_chat.py](examples/01_basic_chat.py) and read it — it's
@@ -114,7 +114,7 @@ tone — is *not* a message. It's a separate top-level `system=` parameter. Set 
 once, and it steers everything. *This is your most powerful lever.*
 
 ```bash
-python examples/02_roles.py
+secrun python examples/02_roles.py
 ```
 
 **Experiment:** open [examples/02_roles.py](examples/02_roles.py), change the
@@ -132,7 +132,7 @@ example.
 `0.0` = focused & repeatable · `1.0` = most varied (and Claude's default). Claude's
 range is **0.0–1.0** (not 0–2). For code and facts, go low.
 ```bash
-python examples/03_temperature.py
+secrun python examples/03_temperature.py
 ```
 
 ### max_tokens — a hard cap on the answer's length
@@ -141,21 +141,21 @@ request. The model is cut off when the budget runs out — possibly mid-sentence
 Watch `stop_reason`: `"max_tokens"` means it was truncated; `"end_turn"` means it
 finished naturally.
 ```bash
-python examples/04_max_tokens.py
+secrun python examples/04_max_tokens.py
 ```
 
 ### top_p — how many options the model may consider
 "Nucleus sampling." `0.1` = only the most obvious tokens; `1.0` = everything
 (default). **Tune temperature OR top_p, not both** — they interact confusingly.
 ```bash
-python examples/05_top_p.py
+secrun python examples/05_top_p.py
 ```
 
 ### stop_sequences — make generation halt at a marker
 A list of strings; generation ends the moment one would appear. The stop text
 itself isn't included. Great for cutting lists or hitting a delimiter.
 ```bash
-python examples/06_stop_sequences.py
+secrun python examples/06_stop_sequences.py
 ```
 
 **Quick reference:**
@@ -189,7 +189,7 @@ trade-off is it needs your key and a network call — and you get back a *count*
 not the individual token pieces (Anthropic's tokenizer isn't public).
 
 ```bash
-python utils/tokens.py          # count a sentence's tokens (free API call)
+secrun python utils/tokens.py          # count a sentence's tokens (free API call)
 ```
 
 Why counting matters:
@@ -213,7 +213,7 @@ and an `estimate_cost()` helper. (Counting is an API call; the cost *math* is
 pure local computation — no network, no key.)
 
 ```bash
-python examples/07_token_counting.py   # tokens -> dollars, across models
+secrun python examples/07_token_counting.py   # tokens -> dollars, across models
 ```
 
 Sample output shows the same request costing wildly different amounts per model —
@@ -232,18 +232,18 @@ see the *actual* usage and cost after.
 
 ```bash
 # See the size and cost first — the counting call is free, so no money spent:
-python hands_on/ask.py snippets/buggy.py "Is there a bug here?" --dry-run
+secrun python hands_on/ask.py snippets/buggy.py "Is there a bug here?" --dry-run
 
 # For real:
-python hands_on/ask.py snippets/buggy.py "Is there a bug here?"
+secrun python hands_on/ask.py snippets/buggy.py "Is there a bug here?"
 
 # Now turn the knobs you just learned:
-python hands_on/ask.py snippets/buggy.py "Rewrite this cleanly" --temperature 0
-python hands_on/ask.py snippets/buggy.py "List the issues" --max-tokens 200 --stop "4."
-python hands_on/ask.py snippets/buggy.py "Explain this" --model claude-sonnet-4-6
+secrun python hands_on/ask.py snippets/buggy.py "Rewrite this cleanly" --temperature 0
+secrun python hands_on/ask.py snippets/buggy.py "List the issues" --max-tokens 200 --stop "4."
+secrun python hands_on/ask.py snippets/buggy.py "Explain this" --model claude-sonnet-4-6
 ```
 
-Run `python hands_on/ask.py --help` to see every knob explained inline. Read the source in
+Run `secrun python hands_on/ask.py --help` to see every knob explained inline. Read the source in
 [hands_on/ask.py](hands_on/ask.py) — it's commented as a tutorial, especially `build_messages()`
 (how the request is assembled, with the system prompt kept separate) and the
 usage/cost reporting at the end.
@@ -265,7 +265,7 @@ on "send messages, get a message."
 generated, so the user sees text appear immediately. It's also the recommended
 way to do long generations (it dodges request timeouts).
 ```bash
-python examples/08_streaming.py
+secrun python examples/08_streaming.py
 ```
 
 ### Structured outputs — make the model return real JSON
@@ -274,7 +274,7 @@ Constrain the reply to match an exact JSON Schema you define
 prompting. (`client.messages.parse()` with a Pydantic model is the ergonomic
 version.)
 ```bash
-python examples/09_structured_outputs.py
+secrun python examples/09_structured_outputs.py
 ```
 
 ### Tool use — let the model use your code
@@ -282,7 +282,7 @@ You describe tools; the model decides when to call one and with what arguments;
 *you* run it and feed the result back. This is how a model gets to actually *do*
 things (query a DB, hit an API).
 ```bash
-python examples/10_tool_use.py
+secrun python examples/10_tool_use.py
 ```
 
 ### Extended thinking & effort — let the model reason first
@@ -290,7 +290,7 @@ Claude's signature capability: on hard problems, let it think in dedicated
 `thinking` blocks before answering, and dial how much **effort** it spends. This
 is the modern replacement for the temperature/top_p knobs on the newest models.
 ```bash
-python examples/11_thinking.py
+secrun python examples/11_thinking.py
 ```
 
 ### Embeddings — turn text into vectors for search & similarity (via Voyage AI)
@@ -301,7 +301,7 @@ a separate provider with its own SDK (`voyageai`) and key (`VOYAGE_API_KEY`). Th
 realistic picture of a Claude app: Claude reasons, Voyage embeds. The example
 ranks sentences against a query — including one that shares *no words* with it.
 ```bash
-python examples/12_embeddings.py
+secrun python examples/12_embeddings.py
 ```
 
 ### Multi-turn conversations — the API has no memory
@@ -310,7 +310,7 @@ is just *you* re-sending the whole `messages` list every turn, appending each ne
 user and assistant message (the `system` prompt stays separate). The example is a
 tiny REPL that grows that list.
 ```bash
-python examples/13_conversation.py
+secrun python examples/13_conversation.py
 ```
 
 ### Error handling & retries — surviving the real world
@@ -319,7 +319,7 @@ The SDK already retries transient failures (429/5xx/connection) with backoff; yo
 job is to tune `timeout`/`max_retries` and catch the *typed* exceptions so "fix
 your request" errors are handled differently from "try again later" ones.
 ```bash
-python examples/14_error_handling.py
+secrun python examples/14_error_handling.py
 ```
 
 ### Pydantic validation — typed, validated responses
@@ -328,7 +328,7 @@ your shape as a **Pydantic model** and pass it as `output_format`. The SDK sends
 the schema, constrains Claude, and hands back a *validated instance* on
 `.parsed_output` — typed attributes, enforced constraints, editor autocomplete.
 ```bash
-python examples/15_pydantic_validation.py
+secrun python examples/15_pydantic_validation.py
 ```
 
 ### Formatting output — Markdown, tables & code blocks
@@ -337,7 +337,7 @@ Claude answers in Markdown; dumped raw to a terminal it's a mess of literal
 real tables in the terminal — the difference between output you skim and output
 you squint at.
 ```bash
-python examples/16_rich_output.py
+secrun python examples/16_rich_output.py
 ```
 
 ### Server-Sent Events (SSE) — the protocol under streaming
@@ -347,7 +347,7 @@ done. Claude's event stream is richer than most — it includes `message_start`,
 `content_block_delta`, `message_delta`, and more. This example shows all of them
 at the raw level, plus per-token timing and partial response accumulation.
 ```bash
-python examples/17_sse.py
+secrun python examples/17_sse.py
 ```
 
 ### Vision — send an image, not just text
@@ -356,7 +356,7 @@ Claude is multimodal: the user `content` becomes a *list of blocks* (a `text` bl
 sent as base64 with a `media_type`. Images are billed as input tokens, scaled by
 pixel size. (Claude *reads* images; it doesn't generate them.)
 ```bash
-python examples/18_vision.py            # or: python examples/18_vision.py my_image.png
+secrun python examples/18_vision.py            # or: secrun python examples/18_vision.py my_image.png
 ```
 
 ### The Batch API — half price for non-urgent work
@@ -365,7 +365,7 @@ many `Request`s at once and get results within 24h (usually <1h) at **50% off**.
 `processing_status` until `"ended"`, then stream results — keyed by `custom_id`,
 since they come back in any order.
 ```bash
-python examples/19_batch_api.py
+secrun python examples/19_batch_api.py
 ```
 
 ### Prompt caching — don't re-pay for a repeated prefix
@@ -374,7 +374,7 @@ writes it (~1.25×), later identical-prefix requests read it at ~0.1× and faste
 a prefix match — keep the constant part (system prompt, tools, a document) first and
 the question last. The example shows `cache_read_input_tokens` kicking in.
 ```bash
-python examples/20_prompt_caching.py
+secrun python examples/20_prompt_caching.py
 ```
 
 ### Async & concurrency — many requests at once
@@ -383,7 +383,7 @@ run concurrently. `AsyncAnthropic` + `asyncio.gather` + a `Semaphore` (bounded
 concurrency) finishes a batch in roughly the time of the slowest call, while staying
 under your rate limit. The example times sequential vs. concurrent.
 ```bash
-python examples/21_async_concurrency.py
+secrun python examples/21_async_concurrency.py
 ```
 
 ---
@@ -397,13 +397,13 @@ shows it as a Markdown summary and a real table. It's where examples 15
 
 ```bash
 # See tokens + cost first — the counting call is free:
-python hands_on/extract.py snippets/meeting_notes.txt --dry-run
+secrun python hands_on/extract.py snippets/meeting_notes.txt --dry-run
 
 # Extract action items (owner, due date, inferred priority) into a table:
-python hands_on/extract.py snippets/meeting_notes.txt
+secrun python hands_on/extract.py snippets/meeting_notes.txt
 
 # Want the raw validated JSON instead? (e.g. to pipe into another tool)
-python hands_on/extract.py snippets/meeting_notes.txt --json
+secrun python hands_on/extract.py snippets/meeting_notes.txt --json
 ```
 
 Read the source in [hands_on/extract.py](hands_on/extract.py): the `Extraction` / `ActionItem`
@@ -455,16 +455,16 @@ window — RAG just decides what to put there.**
 
 ```bash
 # Answer the built-in demo question from the knowledge base:
-python hands_on/rag.py
+secrun python hands_on/rag.py
 
 # Ask your own:
-python hands_on/rag.py "Can I get a refund?"
+secrun python hands_on/rag.py "Can I get a refund?"
 
 # The killer contrast — the same question with NO retrieved context:
-python hands_on/rag.py "How long are deleted notes kept?" --no-rag
+secrun python hands_on/rag.py "How long are deleted notes kept?" --no-rag
 
 # See exactly what gets retrieved and what prompt gets sent:
-python hands_on/rag.py "What plans are there?" -k 5 --show-prompt
+secrun python hands_on/rag.py "What plans are there?" -k 5 --show-prompt
 ```
 
 The knowledge base is about a *made-up* app, so Claude can't fall back on
@@ -512,13 +512,13 @@ started with.
 
 ## Troubleshooting
 
-Hit a snag? Run `python check_setup.py` first — it catches most problems. The
+Hit a snag? Run `secrun python check_setup.py` first — it catches most problems. The
 rest, by the error you see:
 
 | What you see | What it means / the fix |
 |--------------|-------------------------|
 | `ModuleNotFoundError: No module named 'anthropic'` | Dependencies aren't installed (or your venv isn't active). Run `source .venv/bin/activate` then `pip install -r requirements.txt`. |
-| `Set ANTHROPIC_API_KEY ...` on every script | No key found. `cp .env.example .env`, paste your real key, save. |
+| `Set ANTHROPIC_API_KEY ...` on every script | No key found. Store it in your keychain and run the script under `secrun` — see [SECRETS.md](../SECRETS.md). |
 | `AuthenticationError` / 401 | The key is present but wrong — expired, revoked, or a typo. Make a fresh one at the [console](https://console.anthropic.com/settings/keys). |
 | `RateLimitError` / 429 | Too many requests, or you're out of credit. Wait a moment, or check your billing/usage in the console. |
 | `NotFoundError` / 404 about the model | A model name was mistyped or retired. The examples use current IDs; if you changed one, check it against the [model list](https://platform.claude.com/docs/en/about-claude/models/overview). |
@@ -548,7 +548,7 @@ real deployment. Here's the map from each shortcut to what production uses:
 These shortcuts are right for learning and wrong for production. All seven
 concerns — observability, cost, reliability, caching, guardrails, prompt
 versioning, and eval gates — are built from scratch and wired into one running
-app in **[Production](https://github.com/Ailuue/ai-in-production-deep-dive)** (#8 in the
+app in **[Production](https://github.com/alexvervloet/ai-in-production-deep-dive)** (#8 in the
 series). It runs **offline on a mock provider**, so you can see the whole ops
 machinery with no key and no cost.
 
@@ -627,29 +627,30 @@ complaints.
 
 ## The series
 
-This is one of thirteen standalone, hands-on deep dives into building with LLM APIs — eight core, plus five bonus dives.
+This is one of sixteen standalone, hands-on deep dives into building with LLM APIs — eight core, plus eight bonus dives.
 Each one stands on its own — its own setup, examples, and capstone — and they all
 share the same house style: provider-agnostic, built from scratch (no
 frameworks), offline-first examples, and a real capstone. Do them in any order;
 this sequence builds naturally:
 
-1. [OpenAI API](https://github.com/Ailuue/openai-api-deep-dive) — the API from zero
-2. [Claude API](https://github.com/Ailuue/claude-api-deep-dive) — the same ideas, the Anthropic way
-3. [Prompt Engineering](https://github.com/Ailuue/prompt-engineering-deep-dive) — shape model behavior with better prompts (zero/few-shot, chain-of-thought, roles)
-4. [RAG](https://github.com/Ailuue/rag-deep-dive) — answer questions over your own documents
-5. [Evals](https://github.com/Ailuue/evals-deep-dive) — measure whether a change actually helps
-6. [Agents](https://github.com/Ailuue/agents-deep-dive) — give a model tools and a loop so it can act
-7. [Prompt Injection & Guardrails](https://github.com/Ailuue/prompt-injection-deep-dive) — attack and defend all of the above
-8. [Production](https://github.com/Ailuue/ai-in-production-deep-dive) — operate one app end to end: observability, cost, reliability, caching, guardrails, prompt versioning, eval gates
+1. [OpenAI API](https://github.com/alexvervloet/openai-api-deep-dive) — the API from zero
+2. [Claude API](https://github.com/alexvervloet/claude-api-deep-dive) — the same ideas, the Anthropic way
+3. [Prompt Engineering](https://github.com/alexvervloet/prompt-engineering-deep-dive) — shape model behavior with better prompts (zero/few-shot, chain-of-thought, roles)
+4. [RAG](https://github.com/alexvervloet/rag-deep-dive) — answer questions over your own documents
+5. [Evals](https://github.com/alexvervloet/evals-deep-dive) — measure whether a change actually helps
+6. [Agents](https://github.com/alexvervloet/agents-deep-dive) — give a model tools and a loop so it can act
+7. [Prompt Injection & Guardrails](https://github.com/alexvervloet/prompt-injection-deep-dive) — attack and defend all of the above
+8. [Production](https://github.com/alexvervloet/ai-in-production-deep-dive) — operate one app end to end: observability, cost, reliability, caching, guardrails, prompt versioning, eval gates
 
 **Bonus dives** — standalone, slotting in where they're most useful:
 
-- [Context Engineering](https://github.com/Ailuue/context-engineering-deep-dive) — manage what's in the window: memory, compaction, assembly
-- [Multimodal](https://github.com/Ailuue/multimodal-deep-dive) — images & audio, not just text
-- [Fine-tuning](https://github.com/Ailuue/fine-tuning-deep-dive) — teach a model new behavior by example
-- [MCP](https://github.com/Ailuue/mcp-deep-dive) — serve tools, data & prompts to any LLM over a standard protocol
-- [Local Models](https://github.com/Ailuue/local-models-deep-dive) — run open-weight models on your own machine
-- [Agent Harnesses](https://github.com/Ailuue/agent-harness-deep-dive) — build on the loop: hooks, permissions, sandboxing, subagents
-- [Realtime Voice](https://github.com/Ailuue/realtime-voice-deep-dive) — low-latency speech-to-speech agents
+- [Context Engineering](https://github.com/alexvervloet/context-engineering-deep-dive) — manage what's in the window: memory, compaction, assembly
+- [Multimodal](https://github.com/alexvervloet/multimodal-deep-dive) — images & audio, not just text
+- [Fine-tuning](https://github.com/alexvervloet/fine-tuning-deep-dive) — teach a model new behavior by example
+- [MCP](https://github.com/alexvervloet/mcp-deep-dive) — serve tools, data & prompts to any LLM over a standard protocol
+- [Local Models](https://github.com/alexvervloet/local-models-deep-dive) — run open-weight models on your own machine
+- [Agent Harnesses](https://github.com/alexvervloet/agent-harness-deep-dive) — build on the loop: hooks, permissions, sandboxing, subagents
+- [Realtime Voice](https://github.com/alexvervloet/realtime-voice-deep-dive) — low-latency speech-to-speech agents
+- [Observability](https://github.com/alexvervloet/observability-deep-dive) — watch a running app over time: drift, quality, alerting, the flywheel
 
 **You are here: #2 — Claude API.**
