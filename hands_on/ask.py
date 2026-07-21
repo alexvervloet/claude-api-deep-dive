@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-ask.py — Ask a question about a code snippet.
-=============================================
+ask.py: Ask a question about a code snippet.
 
 This is the main hands-on tool of the repo. You point it at a file and ask a
 question about it; it builds a request to a Claude model, shows you the token
@@ -20,7 +19,7 @@ Examples
   secrun python hands_on/ask.py snippets/buggy.py "Is there a bug here?" --model claude-sonnet-4-6
 
   # See the size and cost *before* paying for an answer.
-  # (This still makes the FREE token-counting call, so it needs your key — but it
+  # (This still makes the FREE token-counting call, so it needs your key, but it
   #  never pays for generation.)
   secrun python hands_on/ask.py snippets/buggy.py "Explain this" --dry-run
 
@@ -45,14 +44,14 @@ from utils.pricing import estimate_cost, format_cost
 from utils.tokens import count_message_tokens
 
 # The newest models have removed the classic sampling knobs (temperature, top_p,
-# top_k) — sending them returns an error. They steer behavior through prompting +
+# top_k): sending them returns an error. They steer behavior through prompting +
 # effort/thinking instead (see examples/11_thinking.py). We detect these so the
 # tool quietly drops --temperature / --top-p for them instead of crashing.
 SAMPLING_REMOVED = {"claude-opus-4-8", "claude-opus-4-7", "claude-fable-5"}
 
 
 # A default system prompt. The system prompt sets the assistant's behavior and
-# persona for the whole request — and on Claude it's a top-level parameter, not a
+# persona for the whole request: and on Claude it's a top-level parameter, not a
 # message. See examples/02_roles.py.
 DEFAULT_SYSTEM_PROMPT = (
     "You are a precise, friendly senior software engineer helping someone "
@@ -65,11 +64,11 @@ def build_messages(code: str, question: str) -> list[dict]:
     """Assemble the `messages` list.
 
     A request is a *list of messages*, each with a `role` and `content`. The
-    system prompt is NOT in this list — it rides on the top-level `system=`
+    system prompt is NOT in this list; it rides on the top-level `system=`
     parameter (see main()). Here we send a single `user` message: the code,
     clearly fenced so the model knows where it starts and ends, then the question.
 
-    The model replies with an `assistant` message — that's the part you don't
+    The model replies with an `assistant` message, the part you don't
     write; the API generates it.
     """
     user_content = (
@@ -82,7 +81,7 @@ def build_messages(code: str, question: str) -> list[dict]:
 def extract_text(content: list) -> str:
     """Join the text from a response's content blocks.
 
-    Remember `response.content` is a *list of blocks*, not a string — so we pull
+    Remember `response.content` is a *list of blocks*, not a string, so we pull
     out the `text` blocks and stitch them together.
     """
     return "".join(b.text for b in content if b.type == "text")
@@ -114,7 +113,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help=(
             "Hard cap on how many tokens the model may *generate* (REQUIRED by "
             "Claude; default 1024). Limits the output, not the input. If the "
-            "answer is cut off, stop_reason will be 'max_tokens' — raise this."
+            "answer is cut off, stop_reason will be 'max_tokens'. Raise this."
         ),
     )
 
@@ -136,7 +135,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help=(
             "Nucleus sampling, 0.0–1.0. The model samples only from the most "
             "likely tokens whose probabilities sum to top_p. An alternative to "
-            "temperature — tune one, not both. Ignored by the newest models."
+            "temperature. Tune one, not both. Ignored by the newest models."
         ),
     )
     parser.add_argument(
@@ -171,7 +170,7 @@ def main(argv: list[str]) -> int:
         return 1
 
     # 2. We need the client even for --dry-run, because counting tokens is an API
-    #    call on Claude (a free one — it isn't billed and uses no output budget).
+    #    call on Claude (a free one: it isn't billed and uses no output budget).
     load_dotenv()
     if not os.getenv("ANTHROPIC_API_KEY"):
         print(
@@ -199,7 +198,7 @@ def main(argv: list[str]) -> int:
         print(f"Est. cost:     {format_cost(est)} "
               f"(assuming the full {args.max_tokens:,} output tokens)")
     except KeyError as e:
-        print(f"Est. cost:     unknown — {e}")
+        print(f"Est. cost:     unknown ({e})")
 
     if args.dry_run:
         print("\n[--dry-run] Stopping before generation. No money spent.")
@@ -216,7 +215,7 @@ def main(argv: list[str]) -> int:
     if args.model in SAMPLING_REMOVED and (
         args.temperature is not None or args.top_p is not None
     ):
-        print(f"\n(note: {args.model} ignores temperature/top_p — dropping them.)")
+        print(f"\n(note: {args.model} ignores temperature/top_p, so dropping them.)")
     else:
         if args.temperature is not None:
             request["temperature"] = args.temperature

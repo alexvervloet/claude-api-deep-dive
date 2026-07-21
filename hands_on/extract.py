@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-extract.py — Turn free-form text into validated structured data.
-================================================================
+extract.py: Turn free-form text into validated structured data.
 
 The second hands-on tool of the repo, and a companion to `ask.py`. Where `ask.py`
 gets you *prose* about a file, `extract.py` gets you *data*: point it at messy
@@ -14,7 +13,7 @@ It ties together three things from the examples:
   - Rich output (example 16): the result is shown as a Markdown summary and a
     real table, not a wall of JSON.
   - Token/cost awareness (utils/tokens.py, utils/pricing.py): same --dry-run
-    discipline as ask.py — see the price before you spend. (On Claude, counting
+    discipline as ask.py: see the price before you spend. (On Claude, counting
     tokens is a free API call, so even --dry-run needs your key.)
 
 Examples
@@ -192,7 +191,7 @@ def main(argv: list[str]) -> int:
         print(f"Est. cost:     {format_cost(est)} "
               f"(assuming the full {args.max_tokens:,} output tokens)")
     except KeyError as e:
-        print(f"Est. cost:     unknown — {e}")
+        print(f"Est. cost:     unknown ({e})")
 
     if args.dry_run:
         print("\n[--dry-run] Stopping before generation. No money spent.")
@@ -213,7 +212,7 @@ def main(argv: list[str]) -> int:
     data = next(b.parsed_output for b in response.content if b.type == "text")
     assert data is not None
 
-    # 4. Output — either raw JSON or the formatted view.
+    # 4. Output: either raw JSON or the formatted view.
     if args.json:
         print(data.model_dump_json(indent=2))
     else:

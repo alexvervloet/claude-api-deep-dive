@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
 """
-streaming_server.py — FastAPI streaming server capstone.
-=========================================================
+streaming_server.py: FastAPI streaming server capstone.
 
 This is the capstone project for the SSE section: a production-style FastAPI
 server that streams Claude responses to a browser using Server-Sent Events.
 It shows the three challenges unique to streaming web services:
 
-  1. Token-by-token forwarding — each AI token is wrapped in a JSON SSE event
+  1. Token-by-token forwarding: each AI token is wrapped in a JSON SSE event
      and pushed to the browser as it arrives, not buffered until the end.
 
-  2. Disconnect detection — if the browser closes the tab mid-stream, we detect
+  2. Disconnect detection: if the browser closes the tab mid-stream, we detect
      it and abort the AI request immediately (stops burning tokens).
 
-  3. Error recovery — transient API errors (rate limits, connection blips)
+  3. Error recovery: transient API errors (rate limits, connection blips)
      trigger automatic retries with exponential backoff before the stream
      starts. Mid-stream errors yield a clean error event so the browser can
      show a message rather than hanging indefinitely.
@@ -82,7 +81,7 @@ if not os.getenv("ANTHROPIC_API_KEY"):
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
 logger = logging.getLogger("streaming_server")
 
-# Async client — essential for FastAPI so the event loop isn't blocked while
+# Async client: essential for FastAPI so the event loop isn't blocked while
 # waiting for the API. Each request gets its own concurrent slot.
 async_client = AsyncAnthropic()
 
@@ -133,21 +132,21 @@ async def _stream_tokens(request: Request, body: StreamRequest):
 
     Three concerns handled here:
 
-    1. Retry before streaming starts — transient errors (rate limit, network)
+    1. Retry before streaming starts: transient errors (rate limit, network)
        are retried with exponential backoff. Once tokens begin flowing we
        don't retry (partial output would confuse the client).
 
-    2. Disconnect detection — `request.is_disconnected()` is polled each
+    2. Disconnect detection: `request.is_disconnected()` is polled each
        iteration as a fallback, but in practice Starlette's StreamingResponse
        notices the closed socket first and cancels this generator outright
        (caught below as `asyncio.CancelledError`). Either path aborts the
        Claude call instead of letting it run to completion unread.
 
-    3. Partial response — we accumulate tokens into `partial` so that if an
+    3. Partial response: we accumulate tokens into `partial` so that if an
        error occurs mid-stream, the error event includes what was received.
 
     Claude note: we use client.messages.stream() (the high-level helper) which
-    exposes `stream.text_stream` — a clean async iterator of text pieces. This
+    exposes `stream.text_stream`, a clean async iterator of text pieces. This
     hides the low-level event types (message_start, pings, etc.) that you can
     see in examples/17_sse.py.
     """
@@ -156,7 +155,7 @@ async def _stream_tokens(request: Request, body: StreamRequest):
 
     # --- Phase 1: open the stream with retries ---
     # We check for connection/rate-limit errors before any tokens flow.
-    # After the first token, we don't retry — partial output would be confusing.
+    # After the first token, we don't retry; partial output would be confusing.
     last_exc: Exception | None = None
     stream_context = None
     stream = None
@@ -195,7 +194,7 @@ async def _stream_tokens(request: Request, body: StreamRequest):
             # Check for client disconnect before each yield.
             if await request.is_disconnected():
                 logger.info(
-                    "client disconnected after %d chunks — aborting Claude call",
+                    "client disconnected after %d chunks, aborting Claude call",
                     len(partial),
                 )
                 await stream_context.__aexit__(None, None, None)
@@ -209,7 +208,7 @@ async def _stream_tokens(request: Request, body: StreamRequest):
         # socket and cancels this generator before the is_disconnected()
         # check above gets a chance to run.
         logger.info(
-            "client disconnected after %d chunks — aborting Claude call",
+            "client disconnected after %d chunks, aborting Claude call",
             len(partial),
         )
         raise
@@ -228,7 +227,7 @@ async def _stream_tokens(request: Request, body: StreamRequest):
 
     # --- Phase 3: final stats event ---
     elapsed = time.perf_counter() - start
-    # len(partial) counts SSE text chunks, not LLM tokens — a single chunk can
+    # len(partial) counts SSE text chunks, not LLM tokens; a single chunk can
     # contain several tokens. get_final_message() gives the real output token
     # count from the API's usage stats.
     final_message = await stream.get_final_message()
