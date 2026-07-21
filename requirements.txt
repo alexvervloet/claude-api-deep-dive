@@ -1,5 +1,5 @@
 # The official Anthropic Python SDK. This is the `import anthropic` style.
-# Use a recent version — structured outputs (output_config), the token-counting
+# Use a recent version: structured outputs (output_config), the token-counting
 # endpoint, and adaptive thinking all need an up-to-date SDK. If a parameter is
 # rejected as "unknown", run `pip install -U anthropic`.
 anthropic>=0.111.0
@@ -12,11 +12,11 @@ python-dotenv>=1.0.0
 # a validated instance on `.parsed_output`. (Pydantic v2.)
 pydantic>=2.0.0
 
-# rich renders Markdown, syntax-highlighted code, and tables in the terminal —
+# rich renders Markdown, syntax-highlighted code, and tables in the terminal 
 # used by example 16 and extract.py to format model output nicely.
 rich>=13.0.0
 
-# Voyage AI's SDK — used ONLY by the embeddings example (examples/12_embeddings.py).
+# Voyage AI's SDK: used ONLY by the embeddings example (examples/12_embeddings.py).
 # Anthropic has no first-party embeddings endpoint and recommends Voyage, a
 # separate provider with its own VOYAGE_API_KEY. Optional if you skip example 12.
 voyageai>=0.3.0
