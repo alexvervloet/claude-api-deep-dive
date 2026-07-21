@@ -1,8 +1,7 @@
 """
-Example 09 — structured outputs (guaranteed JSON).
-==================================================
+Example 09: structured outputs (guaranteed JSON).
 
-Often you don't want prose — you want *data* your program can use directly. Claude
+Often you don't want prose. You want *data* your program can use directly. Claude
 can guarantee the reply matches an exact JSON Schema you define. No more fragile
 "please reply in JSON" prompting and hoping.
 
@@ -10,13 +9,13 @@ You ask for this with the `output_config` parameter:
 
     output_config={"format": {"type": "json_schema", "schema": <your schema>}}
 
-The model is then constrained to emit JSON conforming to that schema — the right
+The model is then constrained to emit JSON conforming to that schema, the right
 keys, the right types, every time. The content still arrives as a text block
 containing a JSON *string*, which you parse with `json.loads()`.
 
   >> Ergonomic shortcut: `client.messages.parse(..., output_format=MyPydanticModel)`
      takes a Pydantic model, sends the schema for you, AND returns a validated
-     object on `response.parsed_output` — no manual json.loads. We use the raw
+     object on `response.parsed_output`, with no manual json.loads. We use the raw
      schema below so you can see exactly what's going over the wire.
 
 Run it:
@@ -82,7 +81,7 @@ response = client.messages.create(
 )
 
 # The format guarantee means the first text block is valid JSON matching our
-# schema — safe to parse and use as a dict.
+# schema: safe to parse and use as a dict.
 text = next(b.text for b in response.content if b.type == "text")
 data = json.loads(text)
 

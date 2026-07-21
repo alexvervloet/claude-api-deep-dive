@@ -1,9 +1,8 @@
 """
-Example 18 — vision: sending an image alongside text.
-=====================================================
+Example 18: vision: sending an image alongside text.
 
 Every example so far sent only text. Claude is multimodal: it can also *see*
-images. The request shape barely changes — the user message's `content` becomes a
+images. The request shape barely changes: the user message's `content` becomes a
 *list of blocks*, where each block is either a `text` block or an `image` block.
 You can then ask "what's in this picture?", read a screenshot, or pull data out of
 a photo.
@@ -11,13 +10,13 @@ a photo.
 Two ways to provide the image, both shown here:
   - a public URL Claude fetches (`source` of type `"url"`), or
   - a local file you read and send as base64 (`source` of type `"base64"` with a
-    `media_type`) — what real apps usually do, since the image rides inside the
+    `media_type`), which is what real apps usually do, since the image rides inside the
     request and needs no public hosting.
 
 Images are billed as input tokens too, and the count scales with the image's pixel
-dimensions — a big screenshot can cost more than a page of text. Downscale before
+dimensions: a big screenshot can cost more than a page of text. Downscale before
 sending if you care about cost. (Claude *reads* images; it does not *generate*
-them — image generation isn't part of the API.)
+them; image generation isn't part of the API.)
 
 Run it (uses a public sample image):
 
@@ -89,5 +88,5 @@ response = client.messages.create(
 )
 
 print(next(b.text for b in response.content if b.type == "text"))
-print(f"\n[tokens — input: {response.usage.input_tokens}, output: {response.usage.output_tokens}]")
+print(f"\n[tokens: input {response.usage.input_tokens}, output {response.usage.output_tokens}]")
 print("Notice the input tokens: the image itself is most of them. Bigger image = more tokens.")

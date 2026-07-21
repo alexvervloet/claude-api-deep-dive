@@ -1,6 +1,5 @@
 """
-Example 21 — async & concurrency: many requests at once.
-========================================================
+Example 21: async & concurrency: many requests at once.
 
 Retries (example 14) make a *single* call survive. This is about *throughput*:
 when you have many independent prompts, sending them one-by-one wastes almost all
@@ -60,7 +59,7 @@ async def run_concurrently(max_in_flight: int = 4) -> list[str]:
 
 
 async def run_sequentially() -> list[str]:
-    # A Semaphore(1) is just "one at a time" — the slow baseline.
+    # A Semaphore(1) is just "one at a time": the slow baseline.
     sem = asyncio.Semaphore(1)
     return [await summarize(t, sem) for t in TOPICS]
 
@@ -82,7 +81,7 @@ async def main():
         print(f"  • {topic}: {summary}")
 
     print("\nThe work was identical; only the waiting overlapped. Raise max_in_flight")
-    print("for more speed — until you hit your account's rate limit, which is exactly")
+    print("for more speed, until you hit your account's rate limit, which is exactly")
     print("what the semaphore is there to keep you under.")
 
 

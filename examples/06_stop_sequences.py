@@ -1,12 +1,11 @@
 """
-Example 06 — stop sequences.
-============================
+Example 06: stop sequences.
 
 `stop_sequences` is a list of strings that tell the model: "the moment you're
 about to produce one of these, stop generating." The stop text itself is NOT
 included in the output.
 
-(Note the name: on Claude the parameter is `stop_sequences` — always a list —
+(Note the name: on Claude the parameter is `stop_sequences`, always a list
 and when one fires, `stop_reason` comes back as `"stop_sequence"`.)
 
 Uses:

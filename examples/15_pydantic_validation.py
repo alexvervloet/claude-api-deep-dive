@@ -1,6 +1,5 @@
 """
-Example 15 — Pydantic validation of responses.
-===============================================
+Example 15: Pydantic validation of responses.
 
 Example 09 made the model return JSON matching a hand-written JSON Schema, then
 parsed it with `json.loads()` into a plain dict. That works, but you're left
@@ -13,7 +12,7 @@ rest. `client.messages.parse(...)` (the structured-outputs helper):
   - converts your model into a JSON Schema and sends it as the output format,
   - constrains Claude to match it,
   - and hands back an *already-validated instance of your model* on the text
-    block's `.parsed_output` — typed attributes, not a dict.
+    block's `.parsed_output`: typed attributes, not a dict.
 
 Why this beats a raw dict:
   - **Types**: `review.bugs[0].severity` autocompletes and is checked.
@@ -83,12 +82,12 @@ response = client.messages.parse(
     output_format=CodeReview,
 )
 
-# 3. The parsed object rides on the text block's `.parsed_output` — a validated
+# 3. The parsed object rides on the text block's `.parsed_output`: a validated
 #    CodeReview instance, not a dict. (Remember content is a list of blocks.)
 review = next(b.parsed_output for b in response.content if b.type == "text")
 assert review is not None
 
-# 4. Use it like the typed object it is — attributes, not string keys.
+# 4. Use it like the typed object it is: attributes, not string keys.
 print(f"Language:   {review.language}")
 print(f"Summary:    {review.summary}")
 print(f"Confidence: {review.confidence:.0%}")

@@ -1,9 +1,8 @@
 """
-Example 04 — max_tokens (and stop_reason).
-==========================================
+Example 04: max_tokens (and stop_reason).
 
 `max_tokens` caps how many tokens the model is allowed to GENERATE. It does NOT
-limit your input, and it does NOT make the model "summarize to fit" — it simply
+limit your input, and it does NOT make the model "summarize to fit". It simply
 cuts the model off when the budget runs out, mid-sentence if necessary.
 
 On Claude `max_tokens` is **required** on every request (you've been setting it
@@ -14,9 +13,9 @@ Why the value matters:
   - Latency: shorter answers come back faster.
   - Safety: stop a runaway answer from ballooning.
 
-The companion to watch is `stop_reason` — Claude's name for "why did it stop?":
+The companion to watch is `stop_reason`, Claude's name for "why did it stop?":
   - "end_turn"       : the model finished on its own.
-  - "max_tokens"     : it hit your max_tokens cap — the answer is truncated.
+  - "max_tokens"     : it hit your max_tokens cap, so the answer is truncated.
   - "stop_sequence"  : it hit one of your stop strings (see example 06).
   - "tool_use"       : it wants to call a tool (see example 10).
 

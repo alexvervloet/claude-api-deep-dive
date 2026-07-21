@@ -1,16 +1,15 @@
 """
-Example 02 — system, user, and assistant.
-==========================================
+Example 02: system, user, and assistant.
 
 A chat is a transcript of messages. On Claude there are exactly two roles you put
 in the `messages` list:
 
   - user      : What the human says. The first message must be a `user` message.
   - assistant : What the model said. You include PRIOR assistant messages to give
-                the model memory of the conversation — the API itself is
+                the model memory of the conversation. The API itself is
                 stateless, so *you* resend the history every time.
 
-And then there's the **system prompt** — the standing instructions, persona, and
+And then there's the **system prompt**: the standing instructions, persona, and
 tone. Here's a key Claude difference worth burning in:
 
   >> The system prompt is NOT a message in the list. It's a separate top-level
@@ -41,7 +40,7 @@ client = anthropic.Anthropic()
 
 # Note the assistant message in the middle: we're *simulating* a prior turn so
 # the model continues the thread coherently. This is how you build multi-turn
-# chat — keep appending messages to the list.
+# chat: keep appending messages to the list.
 response = client.messages.create(
     model="claude-haiku-4-5",
     max_tokens=256,

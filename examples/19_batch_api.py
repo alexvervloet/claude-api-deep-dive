@@ -1,27 +1,26 @@
 """
-Example 19 — the Message Batches API: half price, for work that isn't urgent.
-=============================================================================
+Example 19: the Message Batches API: half price, for work that isn't urgent.
 
 Every example so far made *synchronous* calls: you ask, you wait, you get an
-answer. But a lot of real work isn't interactive — classify 10,000 reviews,
+answer. But a lot of real work isn't interactive: classify 10,000 reviews,
 summarize a backlog of tickets, score a dataset. For that, the **Message Batches
 API** is the right tool: you submit many requests at once, Anthropic processes
 them (usually within an hour, max 24h), and you pay **50% less** on all tokens.
 
 The lifecycle (it mirrors a job queue):
 
-  1. Build a list of requests — each a `Request(custom_id, params)`.
-  2. Create the batch   (messages.batches.create) — this starts processing.
-  3. Poll until done    (messages.batches.retrieve) — processing_status -> "ended".
-  4. Stream results     (messages.batches.results) — keyed by your custom_ids.
+  1. Build a list of requests, each a `Request(custom_id, params)`.
+  2. Create the batch   (messages.batches.create), which starts processing.
+  3. Poll until done    (messages.batches.retrieve); processing_status -> "ended".
+  4. Stream results     (messages.batches.results), keyed by your custom_ids.
 
 Two things to internalize:
-  - You wrap each request's parameters in `MessageCreateParamsNonStreaming` — the
+  - You wrap each request's parameters in `MessageCreateParamsNonStreaming`, the
     same arguments you'd pass to `messages.create`, just packaged.
   - **Results come back in any order.** Always match them to inputs by
     `custom_id`, never by position.
 
-Because a batch can take a while, this script does NOT block forever — it prints
+Because a batch can take a while, this script does NOT block forever. It prints
 the batch id and shows you how to check on it. Re-run with the id to poll & fetch.
 
 Run it:
@@ -88,7 +87,7 @@ def check_batch(batch_id: str) -> None:
 
     if batch.processing_status != "ended":
         print(
-            "Not finished yet — batches run within 24h (usually <1h). Re-run this to check again."
+            "Not finished yet; batches run within 24h (usually <1h). Re-run this to check again."
         )
         return
 

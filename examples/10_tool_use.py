@@ -1,9 +1,8 @@
 """
-Example 10 — tool use.
-======================
+Example 10: tool use.
 
 The model can't run code, browse, or query your database. But it *can* tell you
-"I'd like you to call this tool with these arguments" — and then you run it and
+"I'd like you to call this tool with these arguments", and then you run it and
 hand the result back. This is "tool use," and it's how an assistant gets the
 ability to actually *do* things.
 
@@ -17,11 +16,11 @@ The dance has four steps:
   4. You send the result back as a `tool_result` block and the model writes the
      final natural-language answer using it.
 
-The model never runs your code — it only *asks*. You stay in control of what
+The model never runs your code. It only *asks*. You stay in control of what
 actually executes.
 
 A couple of Claude specifics to notice below:
-  - A tool is `{name, description, input_schema}` at the top level — there's no
+  - A tool is `{name, description, input_schema}` at the top level; there's no
     "function" wrapper around it.
   - You append the model's whole `response.content` back as the assistant turn
     (it contains the tool_use block), then a `user` turn carrying the
@@ -85,7 +84,7 @@ print(f"[stop_reason: {first.stop_reason}]")
 
 # --- Step 2 & 3: the model asked for a tool; we run it. ---
 # Append the model's full response (including the tool_use block) as the
-# assistant turn — the API requires the tool_result to follow it.
+# assistant turn: the API requires the tool_result to follow it.
 messages.append({"role": "assistant", "content": first.content})
 
 tool_results = []

@@ -1,9 +1,8 @@
 """
-Example 16 — formatting output: Markdown, tables, and code blocks.
-==================================================================
+Example 16: formatting output: Markdown, tables, and code blocks.
 
-So far we've `print()`ed raw strings. But Claude loves to answer in **Markdown** —
-headings, **bold**, bullet lists, and fenced ```code``` blocks — and dumping that
+So far we've `print()`ed raw strings. But Claude loves to answer in **Markdown** 
+headings, **bold**, bullet lists, and fenced ```code``` blocks, and dumping that
 raw to a terminal shows the literal `**asterisks**` and backticks. Ugly.
 
 The `rich` library renders all of that beautifully in the terminal:
@@ -13,7 +12,7 @@ The `rich` library renders all of that beautifully in the terminal:
 
 This pairs naturally with what you've learned: ask Claude for Markdown and render
 it (live, even, while streaming), or take *structured* data (example 15) and lay
-it out as a table. Nothing here is Claude-specific — it's how you make any model's
+it out as a table. Nothing here is Claude-specific; it's how you make any model's
 output pleasant to read.
 
 This example needs `rich` (in requirements.txt):
@@ -58,7 +57,7 @@ response = client.messages.create(
         }
     ],
 )
-# response.content is a list of blocks — stitch the text blocks together.
+# response.content is a list of blocks: stitch the text blocks together.
 answer = "".join(b.text for b in response.content if b.type == "text")
 
 console.rule("[bold]1. Markdown answer")
@@ -69,14 +68,14 @@ console.print(Markdown(answer))
 #
 # The snippet below is hard-coded so this section can demonstrate Syntax() in
 # isolation, without a network call. In real use you won't call Syntax() on a
-# hard-coded string — the code comes from Claude's response, in one of two ways:
+# hard-coded string: the code comes from Claude's response, in one of two ways:
 #
 #   1. Markdown(answer) already handles it. If the response contains fenced
 #      code blocks (```python ... ```), rich's Markdown renderer detects the
-#      language tag and syntax-highlights the block automatically — see
+#      language tag and syntax-highlights the block automatically: see
 #      section 1 above. No extraction needed; this covers most chat-style use.
 #   2. Extract it yourself when you need the code apart from the surrounding
-#      prose — to save it to a file, execute it, or highlight it standalone:
+#      prose: to save it to a file, execute it, or highlight it standalone:
 #
 #          import re
 #          for lang, code in re.findall(r"```(\w+)?\n(.*?)```", answer, re.DOTALL):

@@ -1,9 +1,8 @@
 """
-Example 17 — Server-Sent Events (SSE): the protocol under streaming.
-=====================================================================
+Example 17: Server-Sent Events (SSE): the protocol under streaming.
 
-Every streaming Claude response — in the Claude.ai UI, in examples/08_streaming.py,
-in every production assistant — travels over a protocol called Server-Sent
+Every streaming Claude response, in the Claude.ai UI, in examples/08_streaming.py,
+and in every production assistant, travels over a protocol called Server-Sent
 Events (SSE). The Anthropic SDK parses it for you, but knowing the raw format
 pays off: it's exactly what you'll produce when you build a backend that
 forwards AI tokens to a browser.
@@ -46,22 +45,22 @@ Rules:
   - The `content_block_delta` events carry the actual text tokens.
   - Token usage arrives in `message_delta`, not a final chunk like OpenAI.
 
-This richer event taxonomy lets you react differently to each phase — ideal
+This richer event taxonomy lets you react differently to each phase, ideal
 when your server needs to track thinking blocks, tool calls, and text separately.
 
 This example has three parts:
 
-  Part 1 — Raw events: iterate the low-level event stream and print each event
+  Part 1, raw events: iterate the low-level event stream and print each event
            exactly as it would look on the wire, including the `event:` type line.
 
-  Part 2 — Token timing: measure time-to-first-token and generation throughput
+  Part 2, token timing: measure time-to-first-token and generation throughput
            to understand the rhythm of incremental delivery.
 
-  Part 3 — Partial accumulation: show how a server buffers tokens in memory
+  Part 3, partial accumulation: show how a server buffers tokens in memory
            to track progress and recover from interruptions.
 
 The capstone that puts all of this into practice is hands_on/streaming_server.py
-— a FastAPI server that streams tokens over SSE to a real browser.
+a FastAPI server that streams tokens over SSE to a real browser.
 
 Run it:
 
@@ -92,7 +91,7 @@ PROMPT = "Give three one-sentence reasons why streaming matters for AI UIs."
 print("=== raw SSE events (as they appear on the wire) ===\n")
 
 # client.messages.create(stream=True) returns a Stream[RawMessageStreamEvent],
-# which gives us every event — message_start, pings, deltas, and message_stop.
+# which gives us every event: message_start, pings, deltas, and message_stop.
 # (client.messages.stream() is the high-level helper that skips non-text events.)
 raw_stream = client.messages.create(
     model="claude-haiku-4-5",
@@ -117,7 +116,7 @@ with raw_stream as stream:
         #   data: <json>
         payload = json.dumps(event.model_dump(exclude_none=True))
         print(f"event: {event.type}")
-        print(f"data: {payload[:100]}{'…' if len(payload) > 100 else ''}")
+        print(f"data: {payload[:100]}{'...' if len(payload) > 100 else ''}")
         print()  # blank line terminates the SSE event
 
         # Only content_block_delta events with text_delta carry actual text.
@@ -170,6 +169,6 @@ to the browser:
     yield f"data: {json.dumps({'type': 'token', 'text': piece})}\\n\\n"
 
 Your server only needs to forward the text; the client doesn't need to know
-about message_start, pings, or message_stop — those are internal plumbing.
+about message_start, pings, or message_stop; those are internal plumbing.
 See hands_on/streaming_server.py for the full production-ready implementation.
 """)

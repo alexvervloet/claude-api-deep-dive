@@ -1,18 +1,17 @@
 """
-Example 12 — embeddings & semantic similarity (via Voyage AI).
-==============================================================
+Example 12: embeddings & semantic similarity (via Voyage AI).
 
 So far every example used a *chat* model that produces text. Embeddings are
 different: an embeddings model turns a piece of text into a list of numbers (a
 "vector") that captures its *meaning*. Texts with similar meaning end up with
-similar vectors — even if they share no words.
+similar vectors, even if they share no words.
 
 This is the engine behind semantic search, recommendations, clustering, and
 "retrieval-augmented generation" (RAG), where you find the most relevant
 documents to stuff into a Claude prompt.
 
 >> Important: this one is a DIFFERENT PROVIDER.
-   Anthropic does not offer a first-party embeddings endpoint — it recommends
+   Anthropic does not offer a first-party embeddings endpoint. It recommends
    Voyage AI. Voyage is a separate service with its own Python SDK (`voyageai`)
    and its own API key (`VOYAGE_API_KEY`), distinct from your Anthropic key.
    That's the realistic picture: in a Claude app, Claude does the reasoning and
@@ -23,7 +22,7 @@ with `input_type="query"` and your *documents* with `input_type="document"`.
 Voyage optimizes each side for retrieval, which improves the match quality. We
 use both below.
 
-How we measure "similar": **cosine similarity** — the cosine of the angle between
+How we measure "similar": **cosine similarity**, the cosine of the angle between
 two vectors. It ranges from -1 (opposite) to 1 (identical direction). Closer to 1
 means more similar in meaning. We compute it by hand, no math libraries needed.
 
@@ -48,8 +47,8 @@ from utils.pricing import estimate_embedding_cost, format_cost
 load_dotenv()
 if not os.getenv("VOYAGE_API_KEY"):
     sys.exit(
-        "Set VOYAGE_API_KEY via secrun — see SECRETS.md (get one at https://www.voyageai.com/). "
-        "This example uses Voyage AI, not Anthropic — see the docstring."
+        "Set VOYAGE_API_KEY via secrun. See SECRETS.md (get one at https://www.voyageai.com/). "
+        "This example uses Voyage AI, not Anthropic. See the docstring."
     )
 
 # The Voyage client reads VOYAGE_API_KEY from the environment automatically.

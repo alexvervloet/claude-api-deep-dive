@@ -1,10 +1,9 @@
 """
-Example 11 — extended thinking & effort.
-========================================
+Example 11: extended thinking & effort.
 
 This is the most distinctly *Claude* capability. On hard problems you can let the
-model **think before it answers** — work through intermediate reasoning in
-dedicated `thinking` blocks — and you control how much effort it spends.
+model **think before it answers**, working through intermediate reasoning in
+dedicated `thinking` blocks, and you control how much effort it spends.
 
 Two parameters:
 
@@ -23,9 +22,9 @@ The response `content` now interleaves block types: `thinking` blocks (the
 reasoning) and `text` blocks (the answer). We handle each by `.type`, the same
 list-of-blocks shape you met in example 01.
 
-Note: thinking requires a recent reasoning model — we use claude-sonnet-4-6 here,
+Note: thinking requires a recent reasoning model. We use claude-sonnet-4-6 here,
 not the Haiku workhorse from the earlier examples. Thinking tokens are billed as
-output tokens, so a thoughtful answer costs more — that's the tradeoff.
+output tokens, so a thoughtful answer costs more. That's the tradeoff.
 
 Run it:
 
@@ -68,4 +67,4 @@ for block in response.content:
 
 print("\n--- usage ---")
 print(response.usage)
-print("(output_tokens includes the thinking — that's what you pay for the extra care.)")
+print("(output_tokens includes the thinking: that's what you pay for the extra care.)")

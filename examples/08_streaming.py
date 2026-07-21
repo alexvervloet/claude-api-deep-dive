@@ -1,20 +1,19 @@
 """
-Example 08 — streaming responses.
-=================================
+Example 08: streaming responses.
 
 By default, `client.messages.create` waits until the *entire* answer is ready,
 then hands it back in one piece. With streaming, the API instead sends the answer
-back in small pieces as the model generates them — exactly like you see text
+back in small pieces as the model generates them, exactly like you see text
 appear word-by-word in the Claude app.
 
 Why stream?
   - Perceived speed: the user sees the first words almost immediately instead of
     staring at a blank screen.
   - Long answers: with large `max_tokens`, a non-streaming request can hit an
-    HTTP timeout. Streaming avoids that — so it's the recommended default for any
+    HTTP timeout. Streaming avoids that, so it's the recommended default for any
     long or open-ended generation.
 
-The Claude SDK gives you a clean helper for this — `client.messages.stream(...)`
+The Claude SDK gives you a clean helper for this: `client.messages.stream(...)`
 as a context manager:
   - `stream.text_stream` yields just the text pieces as they arrive.
   - `stream.get_final_message()` reassembles the whole thing afterward, so you

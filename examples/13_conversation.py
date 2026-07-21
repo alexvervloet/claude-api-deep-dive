@@ -1,6 +1,5 @@
 """
-Example 13 — multi-turn conversations (the API has no memory).
-==============================================================
+Example 13: multi-turn conversations (the API has no memory).
 
 Here's the single most common surprise for newcomers:
 
@@ -26,7 +25,7 @@ Run it (type a few messages, then `quit`):
     secrun python examples/13_conversation.py
 
 Try this to feel the statelessness: tell it your name, then ask "what's my
-name?". It works — because the earlier turns are still in the list. Now look at
+name?". It works, because the earlier turns are still in the list. Now look at
 `trim_history()` below: drop the early turns and Claude genuinely forgets,
 because for the model the conversation *is* whatever list you send.
 """
@@ -46,7 +45,7 @@ client = anthropic.Anthropic()
 
 SYSTEM = "You are a concise, friendly assistant."
 
-# Unlike OpenAI, the system prompt is NOT in this list — it's passed separately.
+# Unlike OpenAI, the system prompt is NOT in this list: it's passed separately.
 # So `messages` holds only user/assistant turns. This list IS the memory.
 messages: list[MessageParam] = []
 
@@ -55,7 +54,7 @@ def trim_history(history: list[MessageParam], max_turns: int = 10) -> list[Messa
     """Keep only the most recent `max_turns` messages.
 
     Every turn you keep is re-sent (and re-billed) on the next request, so real
-    apps cap the history. Drop the oldest turns and Claude forgets them — proof
+    apps cap the history. Drop the oldest turns and Claude forgets them, proof
     that "memory" is just the list you choose to send. (The first message must
     always be a `user` turn, so we trim in user/assistant pairs.)
     """
@@ -84,7 +83,7 @@ while True:
     # 1. Append the user's turn to the running history.
     messages.append({"role": "user", "content": user_input})
 
-    # 2. Send the ENTIRE history every time — that's what gives Claude context.
+    # 2. Send the ENTIRE history every time. That's what gives Claude context.
     response = client.messages.create(
         model="claude-haiku-4-5",
         max_tokens=512,
