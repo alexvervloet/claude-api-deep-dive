@@ -1,8 +1,7 @@
 """
 Token counting with Claude's count_tokens endpoint.
-====================================================
 
-Models don't see characters or words — they see *tokens*. A token is a chunk of
+Models don't see characters or words. They see *tokens*. A token is a chunk of
 text (often a word fragment). Roughly, 1 token ≈ 4 characters of English, or
 about ¾ of a word, but it varies.
 
@@ -12,14 +11,14 @@ install` and run on your laptop. Instead, you ask the API to count for you, via
 `client.messages.count_tokens(...)`.
 
 The good news:
-  - It is **free** — counting tokens is not billed, and it doesn't consume any of
+  - It is **free**: counting tokens is not billed, and it doesn't consume any of
     your output budget.
-  - It is **exact** — it's the same tokenizer the model uses, so the number lines
+  - It is **exact**: it's the same tokenizer the model uses, so the number lines
     up with what you'll be billed for on the input side.
 
 The trade-offs vs. an offline tokenizer:
   - It needs your API key and a network round-trip (still free, just not offline).
-  - You get back a *count*, not the individual token pieces — Anthropic's
+  - You get back a *count*, not the individual token pieces. Anthropic's
     tokenizer internals aren't exposed, so you can't print "here's how the
     sentence was split" the way you can with a public tokenizer.
 
@@ -33,7 +32,7 @@ Why count tokens at all?
 Two functions live here:
   - count_tokens(client, text):          tokens in a raw string.
   - count_message_tokens(client, msgs):  tokens in a full message list, optionally
-                                         including a system prompt and tools — all
+                                         including a system prompt and tools, all
                                          of which count toward your input tokens.
 """
 
@@ -66,7 +65,7 @@ def count_message_tokens(
     """Count input tokens for a full message list.
 
     Unlike a bare string, a real request also carries a system prompt and
-    (sometimes) tool definitions or a structured `output_format` — and **all of
+    (sometimes) tool definitions or a structured `output_format`, and **all of
     it counts** toward your input tokens. Pass `system`/`output_format` here so
     the number matches what you'll be billed for: a Pydantic `output_format` is
     turned into a JSON-schema tool definition under the hood, which can easily
@@ -102,5 +101,5 @@ if __name__ == "__main__":
     print(f"Tokens: {count_tokens(client, sample)}")
     print(
         "\n(Counting is a free API call. Anthropic's tokenizer isn't public, so we "
-        "get the count — not the individual pieces.)"
+        "get the count, not the individual pieces.)"
     )

@@ -1,17 +1,16 @@
 """
 Cost estimation for Claude models.
-==================================
 
 Anthropic bills you per *token*, and charges a different rate for tokens you send
 (input tokens) versus tokens the model generates back (output tokens). Output
 tokens are several times more expensive than input tokens, which is why a chatty
-model — or one that "thinks" a lot, see examples/11_thinking.py — can cost more
+model: or one that "thinks" a lot, see examples/11_thinking.py, can cost more
 than you expect.
 
 Prices are quoted per 1,000,000 tokens. We store them that way below and divide
 when we estimate.
 
-⚠️  PRICES CHANGE. The numbers below are a snapshot and may be out of date by the
+PRICES CHANGE. The numbers below are a snapshot and may be out of date by the
     time you read this. Always confirm against the official pricing page:
         https://platform.claude.com/docs/en/about-claude/pricing
     Treat this module as a *teaching tool*, not a billing source of truth.
@@ -38,7 +37,7 @@ PRICING: dict[str, ModelPrice] = {
 }
 
 # Voyage AI embedding models (see examples/12_embeddings.py). Voyage is a SEPARATE
-# provider — Anthropic's recommended embeddings service — with its own API key.
+# provider: Anthropic's recommended embeddings service, with its own API key.
 # Embeddings have no "output" to generate, so you only pay for the tokens you send
 # in; we keep them in their own table with a single price per 1M tokens.
 VOYAGE_EMBEDDING_PRICING: dict[str, float] = {
@@ -51,7 +50,7 @@ VOYAGE_EMBEDDING_PRICING: dict[str, float] = {
 
 # A note on prompt caching (a Claude feature worth knowing for cost): if you send
 # the same large prefix on many requests, you can cache it. Cached *reads* cost
-# ~0.1x the input price and cache *writes* cost ~1.25x — so repeated context gets
+# ~0.1x the input price and cache *writes* cost ~1.25x: so repeated context gets
 # up to ~90% cheaper. We don't model that here to keep the math simple, but it's
 # the single biggest cost lever for context-heavy apps. See the README's
 # "Where to go next".
