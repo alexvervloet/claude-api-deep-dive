@@ -2,7 +2,7 @@
 # Use a recent version: structured outputs (output_config), the token-counting
 # endpoint, and adaptive thinking all need an up-to-date SDK. If a parameter is
 # rejected as "unknown", run `pip install -U anthropic`.
-anthropic>=0.111.0
+anthropic>=0.111.0,<1
 
 # Loads variables from a .env file (like ANTHROPIC_API_KEY) into the environment.
 python-dotenv>=1.0.0
