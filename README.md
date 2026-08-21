@@ -45,7 +45,7 @@ pip install -r requirements.txt
 # 3. Set up your API key (it does NOT go in .env)
 cp .env.example .env               # optional; holds no secrets
 #    Store your key in your OS keychain and run scripts with `secrun`: 2-minute
-#    setup in ../SECRETS.md. Get a key: https://console.anthropic.com/settings/keys
+#    setup in ../docs/SECRETS.md. Get a key: https://console.anthropic.com/settings/keys
 
 # 4. Confirm everything is wired up correctly (makes no API call, costs nothing)
 secrun python check_setup.py
@@ -518,7 +518,7 @@ rest, by the error you see:
 | What you see | What it means / the fix |
 |--------------|-------------------------|
 | `ModuleNotFoundError: No module named 'anthropic'` | Dependencies aren't installed (or your venv isn't active). Run `source .venv/bin/activate` then `pip install -r requirements.txt`. |
-| `Set ANTHROPIC_API_KEY ...` on every script | No key found. Store it in your keychain and run the script under `secrun`. See [SECRETS.md](../SECRETS.md). |
+| `Set ANTHROPIC_API_KEY ...` on every script | No key found. Store it in your keychain and run the script under `secrun`. See [SECRETS.md](../docs/SECRETS.md). |
 | `AuthenticationError` / 401 | The key is present but wrong: expired, revoked, or a typo. Make a fresh one at the [console](https://console.anthropic.com/settings/keys). |
 | `RateLimitError` / 429 | Too many requests, or you're out of credit. Wait a moment, or check your billing/usage in the console. |
 | `NotFoundError` / 404 about the model | A model name was mistyped or retired. The examples use current IDs; if you changed one, check it against the [model list](https://platform.claude.com/docs/en/about-claude/models/overview). |
