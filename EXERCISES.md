@@ -171,8 +171,8 @@ drop the flag instead of crashing?
 <details><summary>▸ Answer</summary>
 
 Opus 4.8 has removed the sampling knobs, so sending `temperature` would error. The
-tool knows this (see its `SAMPLING_REMOVED` set) and quietly drops the flag for
-those models, a small example of writing code that's robust to the API's frontier
+tool knows this (see its `SAMPLING_REMOVED` set) and drops the flag for
+those models, a small example of writing code that survives the API's frontier
 moving.
 </details>
 
