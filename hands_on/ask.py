@@ -46,7 +46,7 @@ from utils.tokens import count_message_tokens
 # The newest models have removed the classic sampling knobs (temperature, top_p,
 # top_k): sending them returns an error. They steer behavior through prompting +
 # effort/thinking instead (see examples/11_thinking.py). We detect these so the
-# tool quietly drops --temperature / --top-p for them instead of crashing.
+# tool drops --temperature / --top-p for them instead of crashing.
 SAMPLING_REMOVED = {"claude-opus-4-8", "claude-opus-4-7", "claude-fable-5"}
 
 
