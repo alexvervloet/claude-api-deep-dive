@@ -114,7 +114,18 @@ def _done_event(tokens: int, chunks: int, elapsed: float) -> str:
     return f"data: {json.dumps({'type': 'done', 'tokens': tokens, 'chunks': chunks, 'elapsed': round(elapsed, 2)})}\n\n"
 
 
-def _error_event(message: str, partial: str = "") -> str:
+def _error_event(message: str, exc: Exception | None = None, partial: str = "") -> str:
+    """
+    Build an error event. The browser gets `message`; the exception goes to the log.
+
+    That split is the point. Provider errors quote your request back at you, and a
+    401 includes a masked fragment of the key that produced it. The browser is an
+    untrusted client, so it gets a sentence it can act on and nothing more. You
+    keep the detail on the server, where you are already watching the terminal
+    that uvicorn is printing to.
+    """
+    if exc is not None:
+        logger.warning("%s: %s", type(exc).__name__, exc)
     payload: dict = {"type": "error", "message": message}
     if partial:
         payload["partial"] = partial
@@ -176,14 +187,14 @@ async def _stream_tokens(request: Request, body: StreamRequest):
             if attempt < 2:
                 await asyncio.sleep(1.0 * (2**attempt))
         except anthropic.AuthenticationError as exc:
-            yield _error_event(f"Authentication failed: {exc}")
+            yield _error_event("Authentication failed. Check the server log.", exc)
             return
         except anthropic.BadRequestError as exc:
-            yield _error_event(f"Bad request: {exc}")
+            yield _error_event("The API rejected the request. Check the server log.", exc)
             return
 
     if stream_context is None:
-        yield _error_event(f"Could not reach the API after 3 attempts: {last_exc}")
+        yield _error_event("Could not reach the API after 3 attempts.", last_exc)
         return
 
     assert stream is not None
@@ -213,10 +224,14 @@ async def _stream_tokens(request: Request, body: StreamRequest):
         )
         raise
     except (anthropic.RateLimitError, anthropic.APIConnectionError) as exc:
-        yield _error_event(str(exc), partial="".join(partial))
+        yield _error_event(
+            "The connection to the API dropped mid-stream.", exc, partial="".join(partial)
+        )
         return
     except anthropic.APIError as exc:
-        yield _error_event(str(exc), partial="".join(partial))
+        yield _error_event(
+            "The API ended the stream with an error.", exc, partial="".join(partial)
+        )
         return
     finally:
         # Always close the context manager to release the HTTP connection.
