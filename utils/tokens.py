@@ -68,8 +68,8 @@ def count_message_tokens(
     (sometimes) tool definitions or a structured `output_format`, and **all of
     it counts** toward your input tokens. Pass `system`/`output_format` here so
     the number matches what you'll be billed for: a Pydantic `output_format` is
-    turned into a JSON-schema tool definition under the hood, which can easily
-    outweigh the rest of the prompt.
+    turned into a JSON-schema tool definition, which can easily outweigh the
+    rest of the prompt.
 
     The API adds the same small per-message bookkeeping the model uses, so this
     is the authoritative input-token count, not an estimate.
