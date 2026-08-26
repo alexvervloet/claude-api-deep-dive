@@ -51,7 +51,7 @@ SAMPLING_REMOVED = {"claude-opus-4-8", "claude-opus-4-7", "claude-fable-5"}
 
 
 # A default system prompt. The system prompt sets the assistant's behavior and
-# persona for the whole request: and on Claude it's a top-level parameter, not a
+# persona for the whole request, and on Claude it's a top-level parameter, not a
 # message. See examples/02_roles.py.
 DEFAULT_SYSTEM_PROMPT = (
     "You are a precise, friendly senior software engineer helping someone "
