@@ -14,8 +14,8 @@ top_p changes *how many options it's even allowed to consider*.
 Important: Anthropic recommends tuning EITHER temperature OR top_p, not both at
 once, because they interact in confusing ways. Pick one knob and learn it.
 
-(And, as in example 03: `top_p` is one of the sampling knobs the newest models 
-Claude Opus 4.8, Claude Fable 5, have removed. It still works on Claude Haiku
+(And, as in example 03, `top_p` is one of the sampling knobs the newest models,
+Claude Opus 4.8 and Claude Fable 5, have removed. It still works on Claude Haiku
 4.5, which we use here.)
 
 Run it:
