@@ -1,7 +1,7 @@
 """
 Example 16: formatting output: Markdown, tables, and code blocks.
 
-So far we've `print()`ed raw strings. But Claude loves to answer in **Markdown** 
+So far we've `print()`ed raw strings. But Claude loves to answer in **Markdown**:
 headings, **bold**, bullet lists, and fenced ```code``` blocks, and dumping that
 raw to a terminal shows the literal `**asterisks**` and backticks. Ugly.
 
