@@ -46,7 +46,7 @@ print(f"{sentence!r}")
 print(f"  -> {count_tokens(client, sentence)} tokens\n")
 
 # 2. A realistic request, system prompt included. Notice we pass `system`
-#    separately: and it still counts toward your input tokens.
+#    separately, and it still counts toward your input tokens.
 system = "You are a helpful assistant."
 messages = [
     {"role": "user", "content": "Summarize the plot of Hamlet in two sentences."},
