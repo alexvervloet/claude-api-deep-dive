@@ -175,7 +175,7 @@ def main(argv: list[str]) -> int:
     if not os.getenv("ANTHROPIC_API_KEY"):
         print(
             "\nANTHROPIC_API_KEY is not set. Store it in your keychain and run under `secrun` "
-            "(see SECRETS.md). Even --dry-run needs it for the free token-counting call.",
+            "(see ../docs/SECRETS.md). Even --dry-run needs it for the free token-counting call.",
             file=sys.stderr,
         )
         return 1

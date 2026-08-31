@@ -106,14 +106,14 @@ def check_api_key():
     if env is None:
         fail(".env file not found.")
         print("    Create it with:  cp .env.example .env")
-        print("    (Config only; your key loads separately via secrun. See SECRETS.md.)")
+        print("    (Config only; your key loads separately via secrun. See ../docs/SECRETS.md.)")
         return False
 
     # Prefer a real environment variable, fall back to the .env value.
     key = os.getenv("ANTHROPIC_API_KEY") or env.get("ANTHROPIC_API_KEY", "")
     if not key or key == "sk-ant-your-key-here":
         fail("ANTHROPIC_API_KEY is not set.")
-        print("    Store it in your keychain and run `secrun python check_setup.py` . See SECRETS.md.")
+        print("    Store it in your keychain and run `secrun python check_setup.py` . See ../docs/SECRETS.md.")
         return False
     if not key.startswith("sk-ant-"):
         warn("ANTHROPIC_API_KEY is set but doesn't look like a Claude key "

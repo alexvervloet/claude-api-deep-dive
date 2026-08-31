@@ -222,7 +222,7 @@ def main(argv: list[str]) -> int:
     if not os.getenv("ANTHROPIC_API_KEY"):
         print(
             "ANTHROPIC_API_KEY is not set. Store it in your keychain and run under `secrun` "
-            "(see SECRETS.md).",
+            "(see ../docs/SECRETS.md).",
             file=sys.stderr,
         )
         return 1

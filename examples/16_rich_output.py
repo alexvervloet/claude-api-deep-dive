@@ -36,7 +36,7 @@ from rich.table import Table
 
 load_dotenv()
 if not os.getenv("ANTHROPIC_API_KEY"):
-    sys.exit("Set ANTHROPIC_API_KEY via secrun (see SECRETS.md) and try again.")
+    sys.exit("Set ANTHROPIC_API_KEY via secrun (see ../docs/SECRETS.md) and try again.")
 
 client = anthropic.Anthropic()
 console = Console()  # rich's entry point; console.print() understands rich objects
