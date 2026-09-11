@@ -7,7 +7,7 @@ every moving part. Messages and content blocks, the system prompt, the sampling 
 make Claude feel like Claude: tool use and extended thinking.
 
 Walk through this repo rather than reading it. Each section ends with something to run.
-Do the running. That is where the learning is. And once a section clicks,
+Do the running. That's where the learning is. And once a section clicks,
 [EXERCISES.md](EXERCISES.md) has a quick predict-then-run prompt for it. Committing to
 an answer before you run is what makes it stick.
 
@@ -23,8 +23,8 @@ That's it. Everything else, the system prompt, the knobs, the token math, is det
 top of that one request and response. Hold onto that and nothing below will feel
 complicated.
 
-One twist is worth knowing up front. The message you get back is not a plain string. It
-is a **list of content blocks**, each one tagged with a `.type`. For a normal answer you
+One twist is worth knowing up front. The message you get back isn't a plain string. It's
+a **list of content blocks**, each one tagged with a `.type`. For a normal answer you
 read the `text` blocks. That same list is how Claude later hands you its reasoning and
 its tool requests, so it pays to meet it early.
 
@@ -55,7 +55,7 @@ across the board means you're ready for Section 2.
 
 > **You'll need a key for everything here, but the token-counting parts are free.**
 > Claude has no offline tokenizer, unlike some APIs, so counting tokens is an API call
-> that is free and unbilled. Sections 5 and 6 need a key and never cost you anything.
+> that's free and unbilled. Sections 5 and 6 need a key and never cost you anything.
 > More on that below.
 
 > **One optional extra key.** The embeddings example (Section 8) uses
@@ -72,7 +72,7 @@ secrun python examples/01_basic_chat.py
 ```
 
 Open [examples/01_basic_chat.py](examples/01_basic_chat.py) and read it. It's tiny. The
-shape of every call you will ever make is right there:
+shape of every call you'll ever make is right there:
 
 ```python
 response = client.messages.create(
@@ -108,7 +108,7 @@ are two roles inside the list.
   you send each time.
 
 The third piece is the **system prompt**, which holds the standing instructions, the
-persona, and the tone. It is not a message at all. It is a separate top-level `system=`
+persona, and the tone. It isn't a message at all. It's a separate top-level `system=`
 parameter. Set it once and it steers everything, which makes it the strongest lever you
 have.
 
@@ -134,7 +134,7 @@ secrun python examples/03_temperature.py
 ```
 
 ### max_tokens, a hard cap on the answer's length
-This caps output tokens and not input, and on Claude it is required on every request.
+This caps output tokens and not input, and on Claude it's required on every request.
 When the budget runs out the model gets cut off, possibly mid-sentence. Watch
 `stop_reason`. `"max_tokens"` means truncated and `"end_turn"` means it finished on its
 own.
@@ -151,7 +151,7 @@ secrun python examples/05_top_p.py
 
 ### stop_sequences, to halt generation at a marker
 A list of strings. Generation ends the moment one of them would appear, and the stop
-text itself is not included. Good for cutting lists short or stopping at a delimiter.
+text itself isn't included. Good for cutting lists short or stopping at a delimiter.
 ```bash
 secrun python examples/06_stop_sequences.py
 ```
@@ -179,11 +179,11 @@ Models don't read characters or words. They read **tokens**, which are chunks of
 often word fragments. Rough rule: 1 token is about 4 English characters, roughly three
 quarters of a word. Rough isn't good enough for budgeting, so we count exactly.
 
-Here is a real Claude difference. There is no offline tokenizer. You count tokens by
-asking the API, through `client.messages.count_tokens(...)`. The good news is that it is
+Here's a real Claude difference. There's no offline tokenizer. You count tokens by
+asking the API, through `client.messages.count_tokens(...)`. The good news is that it's
 free, unbilled, uses none of your output budget, and exact. The trade is that it needs
 your key and a network call, and you get back a count rather than the individual token
-pieces, because Anthropic's tokenizer is not public.
+pieces, because Anthropic's tokenizer isn't public.
 
 ```bash
 secrun python utils/tokens.py          # count a sentence's tokens (free API call)
@@ -258,8 +258,8 @@ example in the same numbered style, and every one is still a variation on "send
 messages, get a message."
 
 ### Streaming, to get the answer as it's typed
-`client.messages.stream(...)` delivers the response in small pieces as it is generated,
-so the user sees text appear immediately. It is also the recommended way to do long
+`client.messages.stream(...)` delivers the response in small pieces as it's generated,
+so the user sees text appear immediately. It's also the recommended way to do long
 generations, since it dodges request timeouts.
 ```bash
 secrun python examples/08_streaming.py
@@ -291,7 +291,7 @@ secrun python examples/11_thinking.py
 
 ### Embeddings via Voyage AI, turning text into vectors for search and similarity
 Embeddings convert text into numbers that capture meaning, so you can rank text by
-similarity. That is what semantic search and RAG are built on. Anthropic has no
+similarity. That's what semantic search and RAG are built on. Anthropic has no
 first-party embeddings endpoint and recommends [Voyage AI](https://www.voyageai.com/),
 a separate provider with its own SDK (`voyageai`) and key (`VOYAGE_API_KEY`). So a real
 Claude app looks like this: Claude reasons, Voyage embeds. The example ranks sentences
@@ -330,7 +330,7 @@ secrun python examples/15_pydantic_validation.py
 ### Formatting output as Markdown, tables, and code blocks
 Claude answers in Markdown, and dumped raw to a terminal that is a mess of literal
 `**asterisks**`. The `rich` library renders Markdown, syntax-highlighted code, and real
-tables in the terminal. That is the difference between output you skim and output you
+tables in the terminal. That's the difference between output you skim and output you
 squint at.
 ```bash
 secrun python examples/16_rich_output.py
@@ -350,7 +350,7 @@ secrun python examples/17_sse.py
 Claude is multimodal. The user `content` becomes a list of blocks, a `text` block plus
 an `image` block, where the image is either a URL Claude fetches or a local file sent as
 base64 with a `media_type`. Images are billed as input tokens, scaled by pixel size.
-Claude reads images and does not generate them.
+Claude reads images and doesn't generate them.
 ```bash
 secrun python examples/18_vision.py            # or: secrun python examples/18_vision.py my_image.png
 ```
@@ -367,7 +367,7 @@ secrun python examples/19_batch_api.py
 ### Prompt caching, so you don't re-pay for a repeated prefix
 Mark a stable block with `cache_control={"type": "ephemeral"}`. The first request writes
 it at about 1.25×, and later requests with an identical prefix read it at about 0.1× and
-faster. It is a prefix match, so keep the constant part first (system prompt, tools, a
+faster. It's a prefix match, so keep the constant part first (system prompt, tools, a
 document) and the question last. The example shows `cache_read_input_tokens` kicking
 in.
 ```bash
@@ -445,7 +445,7 @@ relevant facts and pasting them into the prompt, which is the smallest thing you
 still call **retrieval-augmented generation (RAG)**. No vector database, no framework.
 Just the embeddings and chat calls you already know, wired together from scratch.
 
-Hold onto one idea. A model can only answer from what is in its context window, and RAG
+Hold onto one idea. A model can only answer from what's in its context window, and RAG
 decides what to put there.
 
 ```bash
@@ -462,7 +462,7 @@ secrun python hands_on/rag.py "How long are deleted notes kept?" --no-rag
 secrun python hands_on/rag.py "What plans are there?" -k 5 --show-prompt
 ```
 
-The knowledge base describes a made-up app, so Claude cannot fall back on training and a
+The knowledge base describes a made-up app, so Claude can't fall back on training and a
 correct answer can only come from retrieval. Run it with `--no-rag` and watch the model
 guess or refuse. That contrast is the lesson. It also shows the real shape of a Claude
 app, where Voyage embeds and Claude reasons, so it uses both keys. `--no-rag` needs only
@@ -528,7 +528,7 @@ at the line.
 ## From teaching code to production
 
 Every example here takes shortcuts that are perfect for learning and wrong for a real
-deployment. Here is the map from each shortcut to what production uses.
+deployment. Here's the map from each shortcut to what production uses.
 
 | This repo's teaching shortcut | In production |
 |-------------------------------|---------------|
@@ -656,4 +656,4 @@ And the whole series lands in one codebase in the
 [capstone](https://github.com/alexvervloet/deep-dive-capstone): a codebase Q&A tool
 built step by step, one tag per dive.
 
-**You are here: #2, Claude API.**
+**You're here: #2, Claude API.**
