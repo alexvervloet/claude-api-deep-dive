@@ -1,6 +1,6 @@
 # Exercises: make the learning stick
 
-Reading code teaches you less than *predicting* what it will do and then checking.
+Reading code teaches you less than *predicting* what it'll do and then checking.
 This file turns each section of the [README](README.md) into a few quick
 active-recall prompts: a thing to predict, a thing to change, and a question to
 answer from memory. None take more than a couple of minutes.
@@ -36,7 +36,7 @@ and what does that teach you about Claude specifically?
 <details><summary>▸ Answer</summary>
 
 It errors. `max_tokens` is **required** on every Claude request. Other APIs let
-you omit it; Claude does not. It's the cap on how much the model may generate.
+you omit it; Claude doesn't. It's the cap on how much the model may generate.
 </details>
 
 ---
@@ -270,7 +270,7 @@ model's minimum cacheable size (≈4096 tokens on Haiku); caching is a prefix ma
 </details>
 
 **Do (async, `21_async_concurrency.py`).** It runs 6 prompts sequentially, then
-4-at-a-time. Why is the concurrent run faster, and what is the `Semaphore` for?
+4-at-a-time. Why is the concurrent run faster, and what's the `Semaphore` for?
 
 <details><summary>▸ Answer</summary>
 
