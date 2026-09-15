@@ -28,12 +28,20 @@ class ModelPrice:
 # A small, representative slice of the catalog, spanning the price spectrum from
 # the fast/cheap workhorse (Haiku) to the most capable model (Fable). Add more as
 # you explore. (input $/1M, output $/1M)
+# Checked against the pricing page on 2026-09-15.
 PRICING: dict[str, ModelPrice] = {
     "claude-haiku-4-5":  ModelPrice(input_per_1m=1.00, output_per_1m=5.00),
+    "claude-sonnet-5":   ModelPrice(input_per_1m=2.00, output_per_1m=10.00),
     "claude-sonnet-4-6": ModelPrice(input_per_1m=3.00, output_per_1m=15.00),
+    "claude-opus-5":     ModelPrice(input_per_1m=5.00, output_per_1m=25.00),
     "claude-opus-4-8":   ModelPrice(input_per_1m=5.00, output_per_1m=25.00),
+    "claude-fable-5-1":  ModelPrice(input_per_1m=10.00, output_per_1m=50.00),
     "claude-fable-5":    ModelPrice(input_per_1m=10.00, output_per_1m=50.00),
 }
+
+# Worth noticing in that table: Sonnet 5 is cheaper than the Sonnet 4.6 it
+# succeeded, at $2/$10 against $3/$15. Newer is not reliably pricier, so
+# "use the older model to save money" is a guess, not a rule. Check the table.
 
 # Voyage AI embedding models (see examples/12_embeddings.py). Voyage is a SEPARATE
 # provider: Anthropic's recommended embeddings service, with its own API key.
