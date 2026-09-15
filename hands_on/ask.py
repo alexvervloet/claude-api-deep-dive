@@ -43,11 +43,21 @@ from dotenv import load_dotenv
 from utils.pricing import estimate_cost, format_cost
 from utils.tokens import count_message_tokens
 
-# The newest models have removed the classic sampling knobs (temperature, top_p,
-# top_k): sending them returns an error. They steer behavior through prompting +
-# effort/thinking instead (see examples/11_thinking.py). We detect these so the
-# tool drops --temperature / --top-p for them instead of crashing.
-SAMPLING_REMOVED = {"claude-opus-4-8", "claude-opus-4-7", "claude-fable-5"}
+# The classic sampling knobs (temperature, top_p, top_k) are being retired in two
+# steps. The MODELS dropped them: on Opus 4.7 and everything after it, sending one
+# returns an error, and those models steer through prompting + effort/thinking
+# instead (see examples/11_thinking.py). We detect those so the tool drops
+# --temperature / --top-p instead of crashing. The SDK dropped them too: anthropic
+# 1.0 removed them from the messages.create() signature, so even on a model that
+# still accepts them they now travel in extra_body (see below).
+SAMPLING_REMOVED = {
+    "claude-opus-4-7",
+    "claude-opus-4-8",
+    "claude-opus-5",
+    "claude-sonnet-5",
+    "claude-fable-5",
+    "claude-fable-5-1",
+}
 
 
 # A default system prompt. The system prompt sets the assistant's behavior and
@@ -215,12 +225,17 @@ def main(argv: list[str]) -> int:
     if args.model in SAMPLING_REMOVED and (
         args.temperature is not None or args.top_p is not None
     ):
-        print(f"\n(note: {args.model} ignores temperature/top_p, so dropping them.)")
+        print(f"\n(note: {args.model} rejects temperature/top_p, so dropping them.)")
     else:
+        # extra_body, not a keyword argument: anthropic 1.0 took these out of the
+        # method signature. The server still accepts them on the older models.
+        sampling = {}
         if args.temperature is not None:
-            request["temperature"] = args.temperature
+            sampling["temperature"] = args.temperature
         if args.top_p is not None:
-            request["top_p"] = args.top_p
+            sampling["top_p"] = args.top_p
+        if sampling:
+            request["extra_body"] = sampling
     if args.stop is not None:
         request["stop_sequences"] = args.stop
 

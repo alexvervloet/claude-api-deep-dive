@@ -2,7 +2,14 @@
 # Use a recent version: structured outputs (output_config), the token-counting
 # endpoint, and adaptive thinking all need an up-to-date SDK. If a parameter is
 # rejected as "unknown", run `pip install -U anthropic`.
-anthropic>=0.111.0,<1
+#
+# The 1.0 release (2026-08-20) is a real migration, not a routine bump. It moves
+# the HTTP layer from httpx to httpx2, raises the Python floor to 3.10, deletes
+# the legacy Text Completions API, and removes temperature/top_p/top_k from the
+# Messages method signatures (examples 03 and 05 show the extra_body escape
+# hatch). The upper bound is what stops a fresh install from resolving to a 2.x
+# that does the same thing again.
+anthropic>=1.0,<2
 
 # Loads variables from a .env file (like ANTHROPIC_API_KEY) into the environment.
 python-dotenv>=1.0.0,<2

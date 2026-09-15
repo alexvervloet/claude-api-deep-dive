@@ -14,9 +14,11 @@ top_p changes *how many options it's even allowed to consider*.
 Important: Anthropic recommends tuning EITHER temperature OR top_p, not both at
 once, because they interact in confusing ways. Pick one knob and learn it.
 
-(And, as in example 03, `top_p` is one of the sampling knobs the newest models,
-Claude Opus 4.8 and Claude Fable 5, have removed. It still works on Claude Haiku
-4.5, which we use here.)
+(And, as in example 03, `top_p` is one of the sampling knobs Claude Opus 4.7 and
+everything after it removed: a 400 if you send one. It still works on Claude
+Haiku 4.5, which we use here, but `anthropic` 1.0 also dropped it from the
+Messages method signature, so it goes through `extra_body` now. Example 03 has
+the full story.)
 
 Run it:
 
@@ -42,7 +44,8 @@ for p in (0.1, 1.0):
         model="claude-haiku-4-5",
         max_tokens=64,
         messages=[{"role": "user", "content": prompt}],
-        top_p=p,
+        # Not a keyword argument any more: see the heads-up in 03_temperature.py.
+        extra_body={"top_p": p},
         # We leave temperature at its default and only vary top_p here.
     )
     text = next((b.text for b in response.content if b.type == "text"), "")

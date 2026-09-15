@@ -18,13 +18,25 @@ We ask the same creative question at three temperatures. Notice how 0.0 tends to
 repeat itself across runs while 1.0 reinvents the answer each time.
 
 >> Heads up, the modern Claude direction:
-   On the newest models (Claude Opus 4.8, Claude Fable 5) the sampling knobs
-   `temperature`, `top_p`, and `top_k` have been *removed*; sending them returns
-   an error. Those models steer behavior through prompting plus the `effort` and
-   thinking controls instead (see examples/11_thinking.py). The knobs in
-   examples 03–06 still work on the fast workhorse models like Claude Haiku 4.5,
-   which is what we use here, and they're worth understanding, but know that the
-   frontier is moving past them.
+   The sampling knobs `temperature`, `top_p`, and `top_k` are being retired, in
+   two separate steps that are easy to confuse.
+
+   1. The *models* dropped them. On Claude Opus 4.7 and everything after it,
+      including Sonnet 5, Opus 5, and Fable 5/5.1, sending any of them returns a
+      400. Those models steer behavior through prompting plus the `effort` and
+      thinking controls instead (see examples/11_thinking.py).
+   2. The *SDK* dropped them. `anthropic` 1.0 removed them from the Messages
+      method signatures, so `temperature=0.2` is no longer a keyword argument
+      you can pass at all, on any model. Where a model still accepts the
+      parameter, you send it through the escape hatch: `extra_body={...}`, as
+      below.
+
+   So the knobs in examples 03 and 05 still work, on the fast workhorse models like
+   Claude Haiku 4.5, which is what we use here, and they now need the escape
+   hatch to get there. They're worth understanding. Just know you're looking at
+   a parameter with one foot out the door, and that `extra_body` is the shape
+   the SDK gives you for exactly that: a parameter the server might take and the
+   client no longer promises anything about.
 """
 
 import os
@@ -46,7 +58,8 @@ for temp in (0.0, 0.5, 1.0):
         model="claude-haiku-4-5",
         max_tokens=64,
         messages=[{"role": "user", "content": prompt}],
-        temperature=temp,
+        # Not a keyword argument any more: see the heads-up at the top.
+        extra_body={"temperature": temp},
     )
     text = next((b.text for b in response.content if b.type == "text"), "")
     print(f"temperature={temp:<4} -> {text}")

@@ -83,16 +83,24 @@ natural finish shows `"end_turn"`. Watching `stop_reason` is how you detect
 truncated answers in real code.
 </details>
 
-**Recall.** On the newest models (Opus 4.8, Fable 5), what happens if you send a
-`temperature` or `top_p` parameter, and what replaced those knobs?
+**Recall.** On Opus 4.7 and newer, what happens if you send a `temperature` or
+`top_p` parameter, and what replaced those knobs? And what changed a second time
+in `anthropic` 1.0?
 
 <details><summary>▸ Answer</summary>
 
-The request **errors**. Those sampling knobs have been removed on the newest
-models. They steer through prompting plus **effort** and **thinking** controls
-instead (see Section 8 / `examples/11_thinking.py`). The knobs still work on the
-workhorse models and are worth understanding, but know the frontier is moving
-past them.
+The request **errors**, a 400. Those sampling knobs were removed on Opus 4.7 and
+everything after it, Sonnet 5, Opus 5 and Fable 5/5.1 included. They steer through
+prompting plus **effort** and **thinking** controls instead (see Section 8 /
+`examples/11_thinking.py`). The knobs still work on the workhorse models like Haiku
+4.5 and are worth understanding, but know the frontier is moving past them.
+
+The second change is in the client, not the server. `anthropic` 1.0 removed
+`temperature`, `top_p`, and `top_k` from the `messages.create()` signature, so you
+can't pass them as keyword arguments on **any** model. Where the server still takes
+them, you send them as `extra_body={"temperature": 0.2}`. Worth separating the two:
+one is a model capability that's gone, the other is an SDK that stopped typing a
+parameter it no longer considers part of the API.
 </details>
 
 ---
@@ -170,10 +178,11 @@ drop the flag instead of crashing?
 
 <details><summary>▸ Answer</summary>
 
-Opus 4.8 has removed the sampling knobs, so sending `temperature` would error. The
-tool knows this (see its `SAMPLING_REMOVED` set) and drops the flag for
-those models, a small example of writing code that survives the API's frontier
-moving.
+Opus 4.8 rejects the sampling knobs, so sending `temperature` would error. The tool
+knows this (see its `SAMPLING_REMOVED` set) and drops the flag for those models, a
+small example of writing code that survives the API's frontier moving. On the models
+that do still take it, look at how it's sent: `extra_body`, not a keyword argument,
+because `anthropic` 1.0 removed it from the method signature.
 </details>
 
 **Stretch.** Point `ask.py` at one of your own files and compare the dry-run
