@@ -69,7 +69,7 @@ candidates = [
     "Click 'Forgot password' to receive a reset link.", # clearly relevant
 ]
 
-model = "voyage-3.5"
+model = "voyage-4"
 
 # Embed the query and the documents separately, telling Voyage which is which.
 query_result = vo.embed([query], model=model, input_type="query")
