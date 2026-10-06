@@ -81,7 +81,7 @@ KNOWLEDGE_BASE = [
 
 DEMO_QUESTION = "How long do I have to recover a note I deleted?"
 
-EMBED_MODEL = "voyage-3.5"
+EMBED_MODEL = "voyage-4"
 
 # The grounding instruction. This is what keeps a RAG system honest: answer from
 # the supplied context, and admit ignorance rather than inventing facts.
