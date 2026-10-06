@@ -48,6 +48,12 @@ PRICING: dict[str, ModelPrice] = {
 # Embeddings have no "output" to generate, so you only pay for the tokens you send
 # in; we keep them in their own table with a single price per 1M tokens.
 VOYAGE_EMBEDDING_PRICING: dict[str, float] = {
+    "voyage-4-lite":   0.02,
+    "voyage-4":        0.06,
+    "voyage-4-large":  0.12,
+    "voyage-code-4":   0.12,
+    # The previous generation, still served. Same price for 3.5; the large and
+    # code models got a third cheaper in the 4 family.
     "voyage-3.5-lite": 0.02,
     "voyage-3.5":      0.06,
     "voyage-3-large":  0.18,
@@ -116,5 +122,5 @@ if __name__ == "__main__":
     print(f"claude-opus-4-8: 1,000 in + 500 out  ->  {format_cost(big)}")
 
     # Embeddings (Voyage AI) are billed on input tokens only:
-    embed_cost = estimate_embedding_cost("voyage-3.5", input_tokens=1_000)
-    print(f"voyage-3.5: 1,000 in  ->  {format_cost(embed_cost)}")
+    embed_cost = estimate_embedding_cost("voyage-4", input_tokens=1_000)
+    print(f"voyage-4: 1,000 in  ->  {format_cost(embed_cost)}")
